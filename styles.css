@@ -1,0 +1,148 @@
+/* Kafri Artisan Breads — home page */
+:root {
+  --blue: #1B3A5B;
+  --blue-deep: #12283f;
+  --cream: #F5EFE3;
+  --terra: #C9763C;
+  --terra-dark: #a85f2c;
+  --ink-soft: rgba(245, 239, 227, .78);
+  --line: rgba(245, 239, 227, .18);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--blue-deep);
+  color: var(--cream);
+  font-family: 'Lato', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+html[lang="he"] body { font-family: 'Heebo', system-ui, sans-serif; }
+
+/* ---------- Background slideshow ---------- */
+.bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+.bg .slide {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0;
+  animation: fade 28s infinite;
+}
+.bg .slide:nth-child(1) { animation-delay: 0s; }
+.bg .slide:nth-child(2) { animation-delay: 7s; }
+.bg .slide:nth-child(3) { animation-delay: 14s; }
+.bg .slide:nth-child(4) { animation-delay: 21s; }
+@keyframes fade {
+  0%   { opacity: 0; transform: scale(1.06); }
+  5%   { opacity: 1; }
+  25%  { opacity: 1; }
+  32%  { opacity: 0; transform: scale(1); }
+  100% { opacity: 0; }
+}
+.bg::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(18,40,63,.55) 0%, rgba(18,40,63,.72) 45%, rgba(18,40,63,.92) 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg .slide { animation: none; }
+  .bg .slide:first-child { opacity: 1; }
+}
+
+/* ---------- Layout ---------- */
+.page {
+  position: relative; z-index: 1;
+  min-height: 100vh; min-height: 100svh;
+  display: flex; flex-direction: column;
+  padding: 20px 20px 24px;
+  max-width: 560px; margin: 0 auto;
+}
+
+.topbar { display: flex; justify-content: flex-end; }
+.lang {
+  color: var(--cream); text-decoration: none;
+  font-size: 14px; letter-spacing: .04em;
+  padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(18,40,63,.35);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.lang:hover { border-color: var(--cream); }
+
+main { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 28px 0 12px; }
+
+/* Logo slot: shows images/logo.png once uploaded, text wordmark until then */
+.brand { text-align: center; margin-bottom: 22px; }
+.brand img { display: block; max-width: 150px; max-height: 150px; margin: 0 auto 14px; }
+.brand h1 {
+  font-family: 'Frank Ruhl Libre', Georgia, serif;
+  font-weight: 500; font-size: clamp(34px, 9vw, 46px); line-height: 1.05;
+  letter-spacing: .01em;
+}
+.brand .sub {
+  margin-top: 8px; font-size: 13px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--terra);
+}
+html[lang="he"] .brand .sub { letter-spacing: .08em; font-size: 15px; }
+
+.about {
+  font-size: 17px; line-height: 1.65; color: var(--ink-soft);
+  text-align: center; margin: 0 auto 28px; max-width: 46ch;
+}
+html[lang="he"] .about { font-size: 18px; }
+
+/* ---------- Bake schedule ---------- */
+.schedule {
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  padding: 14px 4px; margin-bottom: 28px;
+}
+.schedule h2 {
+  font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--terra); text-align: center; margin-bottom: 10px;
+}
+html[lang="he"] .schedule h2 { letter-spacing: .06em; font-size: 14px; }
+.schedule ul { list-style: none; }
+.schedule li {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  padding: 6px 0; font-size: 16px;
+}
+.schedule .day { font-weight: 700; }
+.schedule .what { color: var(--ink-soft); text-align: end; }
+
+/* ---------- Order buttons ---------- */
+.orders { display: grid; gap: 12px; }
+.btn {
+  display: flex; align-items: center; justify-content: space-between;
+  text-decoration: none; color: var(--cream);
+  padding: 16px 20px; border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(18,40,63,.45);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  font-size: 17px; font-weight: 700;
+  transition: background .2s, border-color .2s, transform .15s;
+}
+.btn small { display: block; font-weight: 400; font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
+.btn .arrow { font-size: 20px; opacity: .8; }
+html[dir="rtl"] .btn .arrow { transform: scaleX(-1); }
+.btn:hover { border-color: var(--cream); transform: translateY(-1px); }
+.btn.primary { background: var(--terra); border-color: var(--terra); }
+.btn.primary:hover { background: var(--terra-dark); border-color: var(--terra-dark); }
+.btn.primary small { color: rgba(245,239,227,.9); }
+
+/* ---------- Footer ---------- */
+footer { padding-top: 26px; text-align: center; }
+.contact { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.contact a {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: var(--cream); text-decoration: none; font-size: 14px;
+  padding: 8px 13px; border-radius: 999px;
+  border: 1px solid var(--line); background: rgba(18,40,63,.35);
+}
+.contact a:hover { border-color: var(--cream); }
+.contact svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+.contact [hidden] { display: none; }
+.ltr { direction: ltr; unicode-bidi: embed; }
+.copy { margin-top: 14px; font-size: 12px; color: rgba(245,239,227,.5); }
+
+/* ---------- Desktop ---------- */
+@media (min-width: 900px) {
+  .page { max-width: 600px; padding-top: 28px; }
+  .about { font-size: 18px; }
+}
