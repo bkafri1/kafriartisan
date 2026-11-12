@@ -168,6 +168,35 @@ body{background:var(--cream);font-family:var(--font);color:var(--txt);min-height
 .chip button{border:none;background:none;cursor:pointer;color:var(--txt2);font-size:12px;}
 @media(max-width:560px){.cal-row{grid-template-columns:1fr 70px 64px 52px 28px;gap:5px;}.cal-row .pname{font-size:13px;}}
 
+
+/* ── v12 WIN-BACK ── */
+.wb-panel{direction:rtl;text-align:right;}
+.wb-filters{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;}
+.wb-filters .field{min-width:120px;}
+.wb-filters .field input{width:110px;}
+.wb-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.wb-chip{padding:5px 12px;border-radius:14px;border:1px solid var(--accent-l);background:var(--warm);font-size:12px;font-family:var(--font);cursor:pointer;color:var(--brown);font-weight:700;}
+.wb-summary{font-size:13px;color:var(--txt2);margin:14px 0 6px;}
+.wb-row{display:grid;grid-template-columns:28px 1.6fr 60px 90px 60px 1fr 46px;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);}
+.wb-hdr{border-bottom:2px solid var(--border);}
+.wb-sub{font-size:11px;color:var(--txt2);margin-top:2px;}
+.wb-warn{color:var(--accent);}
+.wb-lang-tag{font-size:9px;font-weight:700;padding:1px 5px;border-radius:6px;background:var(--warm);border:1px solid var(--accent-l);color:var(--accent);}
+.wb-tpl{margin-top:16px;background:var(--warm);border:1px solid var(--accent-l);border-radius:10px;padding:12px 14px;}
+.wb-tpl summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--brown);}
+.wb-tpl input[type=text],.wb-tpl textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--font);outline:none;margin-top:4px;background:#fff;}
+.wb-tpl textarea{min-height:120px;resize:vertical;line-height:1.5;}
+.wb-tpl label{font-size:11px;font-weight:700;color:var(--txt2);display:block;margin-top:10px;}
+.wb-lang{padding:5px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:var(--font);font-size:12px;font-weight:700;color:var(--txt2);}
+.wb-lang.act{border-color:var(--accent);color:var(--accent);background:#fff8ee;}
+.wb-preview{white-space:pre-wrap;background:#fff;border:1px dashed var(--accent-l);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.6;margin-top:4px;}
+.wb-sendbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px;}
+.wb-sendbar .btn-primary{width:auto;padding:12px 22px;}
+.wb-sendbar .btn-primary:disabled{background:var(--border);cursor:not-allowed;}
+.wb-res{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--border);}
+.wb-res a.open-btn{text-decoration:none;display:inline-block;}
+@media(max-width:600px){.wb-row{grid-template-columns:24px 1fr 40px 70px;}.wb-row>div:nth-child(5),.wb-row>div:nth-child(6){display:none;}}
+
 /* SAVE BAR */
 .save-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .save-status{font-size:13px;color:var(--txt2);}
@@ -223,6 +252,7 @@ body{background:var(--cream);font-family:var(--font);color:var(--txt);min-height
     <!-- TABS -->
     <div class="tabs">
       <button class="tab active" onclick="switchTab('calendar')">📅 לוח אפייה</button>
+      <button class="tab" onclick="switchTab('winback')">🔁 לקוחות לחזרה</button>
       <button class="tab" onclick="switchTab('forms')">🔒 טפסים אחרים</button>
     </div>
 
@@ -240,6 +270,51 @@ body{background:var(--cream);font-family:var(--font);color:var(--txt);min-height
           <a class="preview-link" href="order-fall-he.html" target="_blank">↗ סתיו</a>
           <a class="preview-link" href="order-hala-he.html" target="_blank">↗ חלות</a>
         </div>
+      </div>
+    </div>
+
+    <!-- TAB: WIN-BACK (v12) -->
+    <div class="tab-panel" id="tab-winback">
+      <div class="section wb-panel">
+        <div class="section-title">🔁 לקוחות קבועים שלא הזמינו לאחרונה</div>
+        <div class="wb-filters">
+          <div class="field"><label>לפחות הזמנות</label><input type="number" id="wb-min" min="1" value="4"></div>
+          <div class="field"><label>ללא הזמנה ב- (ימים)</label><input type="number" id="wb-days" min="1" value="30"></div>
+          <div class="field"><label>הסתר אם קיבל הודעה ב- (ימים)</label><input type="number" id="wb-cool" min="0" value="60"></div>
+          <label style="font-size:12px;display:flex;align-items:center;gap:6px;"><input type="checkbox" id="wb-showc"> הצג גם כאלה שקיבלו הודעה</label>
+          <button class="open-btn" onclick="wbSearch()">🔍 חפש</button>
+        </div>
+        <div class="wb-chips">
+          <span class="cal-hint">ללא הזמנה:</span>
+          <button class="wb-chip" onclick="wbPreset(30)">חודש</button>
+          <button class="wb-chip" onclick="wbPreset(60)">חודשיים</button>
+          <button class="wb-chip" onclick="wbPreset(90)">3 חודשים</button>
+          <button class="wb-chip" onclick="wbPreset(120)">4 חודשים</button>
+        </div>
+        <div class="wb-summary" id="wb-summary"></div>
+        <div id="wb-list"></div>
+
+        <details class="wb-tpl" open>
+          <summary>✉️ ההודעה ללקוח (נשלחת בשפה של הלקוח)</summary>
+          <div style="display:flex;gap:6px;margin-top:10px;align-items:center;flex-wrap:wrap;">
+            <button class="wb-lang act" data-lang="he" onclick="wbShowTemplate('he')">עברית</button>
+            <button class="wb-lang" data-lang="en" onclick="wbShowTemplate('en')">English</button>
+            <button class="skip-btn" onclick="wbResetTemplate()" style="margin-inline-start:auto;">↺ חזור לנוסח המקורי</button>
+          </div>
+          <label>נושא המייל</label><input type="text" id="wb-subject" oninput="wbOnEdit()">
+          <label>ההודעה (מייל + SMS/וואטסאפ) — <span dir="ltr">{name} {code} {expires} {link}</span> מתמלאים אוטומטית</label>
+          <textarea id="wb-body" oninput="wbOnEdit()"></textarea>
+          <label>תצוגה מקדימה</label><div class="wb-preview" id="wb-preview"></div>
+          <p class="cal-hint" style="margin-top:8px;">🎟️ קופון אישי חד-פעמי: $5 הנחה בהזמנה מ-$30 · לחמי מחמצת וסתיו · תוקף
+            <input type="number" id="wb-exp" value="14" min="1" style="width:56px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;" oninput="wbPreview()"> ימים.
+            במייל מתווספים אוטומטית כתובת העסק ואפשרות הסרה.</p>
+        </details>
+
+        <div class="wb-sendbar">
+          <label style="font-size:13px;display:flex;align-items:center;gap:6px;"><input type="checkbox" id="wb-email" checked> שלח מייל אוטומטית (ללקוחות עם אימייל)</label>
+          <button class="btn-primary" id="wb-send" onclick="wbSend()" disabled>בחר לקוחות מהרשימה</button>
+        </div>
+        <div id="wb-results"></div>
       </div>
     </div>
 
@@ -311,9 +386,10 @@ function logout() {
 // ── TABS ──
 function switchTab(tab) {
   activeTab = tab;
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['calendar','forms'][i] === tab));
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['calendar','winback','forms'][i] === tab));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'winback') wbInit();
 }
 
 // ── SETTINGS (Hala tab only — decorative localStorage settings, unchanged for now) ──
@@ -782,6 +858,170 @@ function setBlocked(line, date, product_id, blocked) {
   run({ action: 'setBlocked', sheet: LINE_SHEETS[line], product_id, date, blocked: String(blocked) },
     blocked ? '🔒 המוצר חסום להזמנה (נשאר גלוי ללקוחות)' : '✓ המוצר זמין להזמנה');
 }
+
+// ════════════════════════════════════════════════════════════
+// v12 — לקוחות לחזרה (Win-back)
+// ════════════════════════════════════════════════════════════
+let wbCustomers = [];
+let wbTemplates = null;
+let wbLang = 'he';
+const WB_TPL_KEY = 'lm_winback_templates';
+
+async function wbInit() {
+  if (wbTemplates) return;
+  try {
+    const saved = JSON.parse(localStorage.getItem(WB_TPL_KEY) || 'null');
+    if (saved && saved.he && saved.en) wbTemplates = saved;
+  } catch (e) {}
+  if (!wbTemplates) {
+    try { const d = await api({ action: 'winbackDefaults' }); if (d.success) wbTemplates = d.templates; } catch (e) {}
+  }
+  wbShowTemplate('he');
+  wbSearch();
+}
+function wbSaveTemplatesLocal() { try { localStorage.setItem(WB_TPL_KEY, JSON.stringify(wbTemplates)); } catch (e) {} }
+function wbShowTemplate(lang) {
+  if (!wbTemplates) return;
+  wbReadTemplate();
+  wbLang = lang;
+  document.querySelectorAll('.wb-lang').forEach(b => b.classList.toggle('act', b.dataset.lang === lang));
+  const subj = document.getElementById('wb-subject'), body = document.getElementById('wb-body');
+  subj.value = wbTemplates[lang].subject; body.value = wbTemplates[lang].body;
+  const dir = lang === 'he' ? 'rtl' : 'ltr'; subj.dir = dir; body.dir = dir;
+  wbPreview();
+}
+function wbReadTemplate() {
+  if (!wbTemplates) return;
+  const subj = document.getElementById('wb-subject'), body = document.getElementById('wb-body');
+  if (subj && subj.value !== undefined && subj.dataset.ready) { wbTemplates[wbLang].subject = subj.value; wbTemplates[wbLang].body = body.value; }
+  if (subj) subj.dataset.ready = '1';
+}
+function wbOnEdit() { wbReadTemplate(); wbSaveTemplatesLocal(); wbPreview(); }
+async function wbResetTemplate() {
+  try {
+    const d = await api({ action: 'winbackDefaults' });
+    if (d.success) { wbTemplates[wbLang] = d.templates[wbLang]; wbSaveTemplatesLocal(); document.getElementById('wb-subject').dataset.ready = ''; wbShowTemplate(wbLang); }
+  } catch (e) { showToast('שגיאת רשת', true); }
+}
+function wbPreview() {
+  const days = parseInt(document.getElementById('wb-exp').value, 10) || 14;
+  const d = new Date(); d.setDate(d.getDate() + days);
+  const exp = wbLang === 'en' ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2);
+  const first = wbLang === 'en' ? 'Dana' : 'דנה';
+  const txt = (document.getElementById('wb-body').value || '').replace(/\{name\}/g, first).replace(/\{code\}/g, 'BACK-DANA-4K7')
+    .replace(/\{expires\}/g, exp).replace(/\{link\}/g, 'kafriartisan.com');
+  const pv = document.getElementById('wb-preview'); pv.textContent = txt; pv.dir = wbLang === 'he' ? 'rtl' : 'ltr';
+}
+
+function wbPreset(days) { document.getElementById('wb-days').value = days; wbSearch(); }
+
+async function wbSearch() {
+  const box = document.getElementById('wb-list');
+  box.innerHTML = '<div class="cal-loading">מחפש לקוחות...</div>';
+  document.getElementById('wb-results').innerHTML = '';
+  try {
+    const d = await api({
+      action: 'winbackList',
+      minOrders: document.getElementById('wb-min').value,
+      inactiveDays: document.getElementById('wb-days').value,
+      cooldownDays: document.getElementById('wb-cool').value,
+      showContacted: String(document.getElementById('wb-showc').checked),
+    });
+    if (!d.success) { box.innerHTML = `<div class="cal-error">שגיאה: ${esc(d.error)}</div>`; return; }
+    wbCustomers = d.customers;
+    document.getElementById('wb-summary').innerHTML =
+      `נמצאו <b>${d.customers.length}</b> לקוחות מתוך ${d.totalCustomers}` +
+      (d.hiddenContacted ? ` · ${d.hiddenContacted} הוסתרו (קיבלו הודעה ב-${d.params.cooldownDays} הימים האחרונים)` : '') +
+      (d.emailQuota != null ? ` · מכסת מיילים להיום: ${d.emailQuota}` : '');
+    wbRender();
+  } catch (e) { box.innerHTML = '<div class="cal-error">שגיאת רשת. בדוק חיבור ונסה שוב.</div>'; }
+}
+
+function wbFmtDate(ymd) { const [y, m, d] = ymd.split('-'); return `${+d}/${+m}/${y.slice(2)}`; }
+
+function wbRender() {
+  const box = document.getElementById('wb-list');
+  if (!wbCustomers.length) { box.innerHTML = '<div class="cal-empty">אין לקוחות שעונים על החיפוש.</div>'; wbUpdateCount(); return; }
+  box.innerHTML = `<div class="wb-row wb-hdr">
+      <div><input type="checkbox" id="wb-all" onchange="wbSelectAll(this.checked)"></div>
+      <div class="col-h">לקוח</div><div class="col-h">הזמנות</div><div class="col-h">הזמנה אחרונה</div>
+      <div class="col-h">סה״כ</div><div class="col-h">מוצר אהוב</div><div></div></div>` +
+    wbCustomers.map((c, i) => `<div class="wb-row">
+      <div><input type="checkbox" class="wb-sel" data-i="${i}" onchange="wbUpdateCount()"></div>
+      <div><div class="pname">${esc(c.name)} <span class="wb-lang-tag">${c.lang === 'en' ? 'EN' : 'HE'}</span></div>
+        <div class="wb-sub"><span dir="ltr">${esc(c.phone)}</span>${c.email ? ' · ' + esc(c.email) : ' · <i>אין אימייל</i>'}</div>
+        ${c.lastContacted ? `<div class="wb-sub wb-warn">נשלחה הודעה ב-${wbFmtDate(c.lastContacted)}</div>` : ''}</div>
+      <div class="cal-num">${c.orders}</div>
+      <div class="cal-num">${wbFmtDate(c.lastDate)}<div class="wb-sub">לפני ${c.daysSince} ימים</div></div>
+      <div class="cal-num">$${c.total}</div>
+      <div class="wb-sub">${esc(c.favorite)}</div>
+      <div><button class="icon-btn" title="הסר מהרשימה לצמיתות (לא רוצה הודעות)" onclick="wbOptOut(${i})">הסר</button></div>
+    </div>`).join('');
+  wbUpdateCount();
+}
+function wbSelectAll(on) { document.querySelectorAll('.wb-sel').forEach(c => { c.checked = on; }); wbUpdateCount(); }
+function wbSelected() { return Array.from(document.querySelectorAll('.wb-sel:checked')).map(c => wbCustomers[+c.dataset.i]); }
+function wbUpdateCount() {
+  const n = wbSelected().length;
+  const btn = document.getElementById('wb-send');
+  btn.disabled = !n;
+  btn.textContent = n ? `🎟️ צור קופונים ושלח ל-${n} לקוחות` : 'בחר לקוחות מהרשימה';
+}
+async function wbOptOut(i) {
+  const c = wbCustomers[i];
+  if (!confirm(`להסיר את ${c.name} מהרשימה? הלקוח לא יופיע כאן יותר.`)) return;
+  try {
+    const r = await api({ action: 'winbackOptOut', customer_key: c.key, name: c.name, phone: c.phone, email: c.email });
+    if (r.success) { showToast('✓ הוסר מהרשימה'); wbCustomers.splice(i, 1); wbRender(); }
+    else showToast('שגיאה: ' + r.error, true);
+  } catch (e) { showToast('שגיאת רשת', true); }
+}
+
+async function wbSend() {
+  const sel = wbSelected();
+  if (!sel.length) return;
+  wbReadTemplate(); wbSaveTemplatesLocal();
+  const sendEmail = document.getElementById('wb-email').checked;
+  const withEmail = sel.filter(c => c.email).length;
+  if (!confirm(`ליצור ${sel.length} קופונים אישיים${sendEmail ? ` ולשלוח ${withEmail} מיילים` : ''}?`)) return;
+  const btn = document.getElementById('wb-send');
+  btn.disabled = true; btn.textContent = 'שולח...';
+  try {
+    const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({
+      action: 'winbackSend', key: adminKey, sendEmail,
+      expiresDays: parseInt(document.getElementById('wb-exp').value, 10) || 14,
+      templates: wbTemplates, customers: sel,
+    }) });
+    const d = await res.json();
+    if (!d.success) { showToast('שגיאה: ' + d.error, true); wbUpdateCount(); return; }
+    wbShowResults(d.results);
+    showToast(`✓ נוצרו ${d.results.length} קופונים`);
+    wbCustomers = wbCustomers.filter(c => !sel.includes(c));
+    wbRender();
+  } catch (e) { showToast('שגיאת רשת — בדוק בגיליון WinBack מה נשלח לפני שמנסים שוב', true); wbUpdateCount(); }
+}
+
+function wbShowResults(results) {
+  const box = document.getElementById('wb-results');
+  box.innerHTML = `<div class="section-title" style="margin-top:6px;">✅ נשלח — עכשיו אפשר לשלוח גם הודעה</div>
+    <p class="cal-hint" style="margin-bottom:8px;">לחיצה על "SMS" או "WhatsApp" פותחת את ההודעה מוכנה בטלפון/במחשב — רק ללחוץ שלח.</p>` +
+    results.map((r, i) => `<div class="wb-res">
+      <div><div class="pname">${esc(r.name)}</div>
+        <div class="wb-sub"><b dir="ltr">${esc(r.code)}</b> · בתוקף עד ${wbFmtDate(r.expires)} ·
+        ${r.emailed ? '📧 מייל נשלח' : (r.emailError ? '⚠️ המייל נכשל' : 'אין אימייל')}</div></div>
+      <div class="cal-actions">
+        ${r.phone ? `<a class="open-btn" href="sms:${r.phone}?&body=${encodeURIComponent(r.text)}">💬 SMS</a>
+        <a class="open-btn" target="_blank" rel="noopener" href="https://wa.me/${r.phone.replace('+', '')}?text=${encodeURIComponent(r.text)}">WhatsApp</a>` : ''}
+        <button class="skip-btn" onclick="wbCopy(${i})">העתק</button>
+      </div></div>`).join('');
+  box._results = results;
+  box.scrollIntoView({ behavior: 'smooth' });
+}
+function wbCopy(i) {
+  const r = document.getElementById('wb-results')._results[i];
+  try { navigator.clipboard.writeText(r.text); showToast('✓ ההודעה הועתקה'); } catch (e) { prompt('העתק:', r.text); }
+}
+
 </script>
 </body>
 </html>
