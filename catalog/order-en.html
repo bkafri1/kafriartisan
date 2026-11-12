@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bread from Kafri — Order Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF6EF;--brown:#5C3D2E;--accent:#C17D3C;--accent-l:#E8C99A;
+  --accent-h:#A66828;--txt:#2C1A0E;--txt2:#7A5C44;--border:#DDD0BF;
+  --bg:#FFF;--warm:#FDF5E8;--green:#2E7D32;--green-bg:#E8F5E9;
+  --red:#C0392B;--red-bg:#FDEDEC;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);font-family:'Lato', sans-serif;color:var(--txt);min-height:100vh;direction:ltr;}
+.header{background:var(--brown);color:#fff;text-align:center;padding:36px 20px 28px;}
+.header h1{font-size:30px;font-weight:700;margin-bottom:4px;}
+.tagline{font-size:13px;opacity:.85;font-weight:300;line-height:1.6;max-width:420px;margin:0 auto 12px;}
+.fresh-badge{display:inline-block;background:var(--accent);color:#fff;border-radius:20px;padding:5px 18px;font-size:13px;font-weight:500;margin-bottom:6px;}
+.lang-link{display:inline-block;margin-top:10px;font-size:12px;color:rgba(255,255,255,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.3);}
+.lang-link:hover{color:#fff;}
+.main{max-width:680px;margin:0 auto;padding:24px 16px 60px;}
+.section{background:var(--bg);border-radius:16px;border:1px solid var(--border);padding:22px;margin-bottom:18px;animation:fi .3s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.stitle{font-size:16px;font-weight:700;color:var(--brown);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+/* PRODUCT */
+.pacc{border-bottom:1px solid var(--border);}
+.pacc:last-child{border-bottom:none;}
+.pmain{display:flex;align-items:center;padding:13px 0;gap:10px;}
+.pacc:first-child .pmain{padding-top:0;}
+.pinfo{flex:1;min-width:0;}
+.pname{font-size:15px;font-weight:600;color:var(--txt);margin-bottom:3px;line-height:1.3;}
+.pbadge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:9px;background:var(--warm);color:var(--accent);border:1px solid var(--accent-l);font-weight:600;}
+.pinfo-btn{background:none;border:none;cursor:pointer;color:var(--txt2);font-size:12px;font-family:inherit;display:flex;align-items:center;gap:3px;padding:3px 0;margin-top:3px;transition:color .2s;}
+.pinfo-btn:hover{color:var(--accent);}
+.pinfo-btn .arr{transition:transform .25s;font-style:normal;font-size:9px;}
+.pinfo-btn.open .arr{transform:rotate(180deg);}
+.pprice{font-size:14px;font-weight:700;color:var(--accent);white-space:nowrap;margin:0 6px;}
+.qty{display:flex;align-items:center;border:1px solid var(--border);border-radius:22px;overflow:hidden;flex-shrink:0;}
+.qbtn{width:34px;height:34px;background:none;border:none;cursor:pointer;font-size:18px;color:var(--accent);display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.qbtn:hover{background:var(--warm);}
+.qbtn:disabled{opacity:.3;cursor:not-allowed;}
+.qnum{min-width:26px;text-align:center;font-size:15px;font-weight:700;color:var(--txt);}
+.pdet{display:none;padding:0 0 13px;animation:fi .2s ease;}
+.pdet.open{display:block;}
+.ppitch{font-size:13px;color:var(--txt2);line-height:1.65;margin-bottom:12px;font-style:italic;padding:9px 12px;background:var(--warm);border-radius:0 8px 8px 0;border-left:3px solid var(--accent-l);}
+.ngrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px;}
+@media(max-width:400px){.ngrid{grid-template-columns:repeat(2,1fr);}}
+.ncell{background:var(--warm);border:1px solid var(--accent-l);border-radius:8px;padding:7px 5px;text-align:center;}
+.nval{font-size:15px;font-weight:700;color:var(--brown);display:block;}
+.nlbl{font-size:10px;color:var(--txt2);display:block;margin-top:1px;}
+.ilbl{font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.ilst{font-size:12px;color:var(--txt2);line-height:1.55;}
+/* FIELDS */
+.fg{display:flex;flex-direction:column;gap:12px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:460px){.fr{grid-template-columns:1fr;}}
+.fi2{display:flex;flex-direction:column;gap:4px;}
+.fi2 label{font-size:12px;font-weight:600;color:var(--txt2);}
+.fi2 input,.fi2 textarea{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:9px;font-size:15px;font-family:inherit;color:var(--txt);background:#fff;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;}
+.fi2 input:focus,.fi2 textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(193,125,60,.12);}
+.fi2 textarea{resize:vertical;min-height:68px;line-height:1.5;}
+/* RADIO */
+.rg{display:flex;flex-direction:column;gap:9px;}
+.ro{display:flex;align-items:flex-start;gap:9px;cursor:pointer;padding:11px 13px;border:1px solid var(--border);border-radius:9px;transition:border-color .2s,background .2s;}
+.ro:hover{border-color:var(--accent-l);background:var(--warm);}
+.ro.sel{border-color:var(--accent);background:var(--warm);}
+.ro input{width:17px;height:17px;flex-shrink:0;margin-top:2px;accent-color:var(--accent);}
+.rl{font-size:14px;line-height:1.4;}
+.rl .sub{font-size:12px;color:var(--txt2);margin-top:2px;}
+/* TOGGLE */
+.tg{display:flex;gap:9px;flex-wrap:wrap;}
+.tb{flex:1;min-width:110px;padding:9px 14px;border:1px solid var(--border);border-radius:9px;background:#fff;cursor:pointer;font-size:13px;font-family:inherit;color:var(--txt2);text-align:center;transition:all .2s;}
+.tb:hover{border-color:var(--accent-l);}
+.tb.act{border-color:var(--accent);background:var(--warm);color:var(--accent);font-weight:700;}
+/* SUMMARY */
+.sumbox{background:var(--warm);border:1px solid var(--accent-l);border-radius:11px;padding:14px;margin-bottom:4px;}
+.sr{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:3px 0;}
+.sr.empty{color:var(--txt2);font-style:italic;font-size:13px;}
+.sdiv{border:none;border-top:1px solid var(--accent-l);margin:8px 0;}
+.stot{font-size:17px;font-weight:700;color:var(--brown);}
+/* COUPON */
+.coupon-box{margin-top:10px;}
+.coupon-row{display:flex;gap:8px;}
+.coupon-row input{flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-size:14px;font-family:inherit;color:var(--txt);background:#fff;outline:none;transition:border-color .2s,box-shadow .2s;}
+.coupon-row input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(193,125,60,.12);}
+.coupon-btn{padding:9px 16px;border-radius:9px;border:1px solid var(--accent);background:#fff;color:var(--accent);font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;transition:all .2s;}
+.coupon-btn:hover{background:var(--warm);}
+.coupon-msg{font-size:12px;margin-top:6px;min-height:14px;color:var(--txt2);}
+.coupon-msg.err{color:var(--red);}
+.coupon-applied{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--green-bg);border:1px solid #A5D6A7;border-radius:9px;padding:9px 12px;font-size:13px;color:var(--green);font-weight:700;}
+.coupon-applied button{background:none;border:none;color:var(--green);text-decoration:underline;cursor:pointer;font-size:12px;font-family:inherit;font-weight:400;}
+/* SUBMIT */
+.subbtn{width:100%;padding:15px;background:var(--accent);color:#fff;border:none;border-radius:11px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;transition:background .2s,transform .1s;margin-top:14px;}
+.subbtn:hover{background:var(--accent-h);}
+.subbtn:active{transform:scale(.99);}
+.subbtn:disabled{background:var(--border);cursor:not-allowed;color:var(--txt2);}
+/* SAVED BANNER */
+.sbanner{display:none;align-items:center;gap:9px;background:var(--green-bg);border:1px solid #A5D6A7;border-radius:9px;padding:9px 13px;margin-bottom:14px;font-size:13px;color:var(--green);}
+.sbanner.show{display:flex;}
+/* CLOSED SCREEN */
+.closed-screen{display:none;text-align:center;padding:60px 20px;max-width:480px;margin:0 auto;}
+.closed-screen.show{display:block;}
+/* THANK YOU SCREEN */
+.ty-screen{display:none;max-width:680px;margin:0 auto;padding:24px 16px 60px;}
+.ty-screen.show{display:block;}
+.ty-card{background:var(--bg);border-radius:16px;border:1px solid var(--border);padding:28px;margin-bottom:18px;text-align:center;}
+.ty-icon{font-size:56px;margin-bottom:12px;}
+.ty-title{font-size:24px;font-weight:700;color:var(--brown);margin-bottom:8px;}
+.ty-sub{font-size:14px;color:var(--txt2);line-height:1.6;}
+.pay-section{background:var(--bg);border-radius:16px;border:1px solid var(--border);padding:22px;margin-bottom:18px;}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+@media(max-width:420px){.pay-grid{grid-template-columns:1fr;}}
+.pay-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:11px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:15px;font-weight:700;color:var(--txt);text-decoration:none;transition:all .2s;}
+.pay-btn:hover{border-color:var(--accent);background:var(--warm);}
+.pay-icon{font-size:22px;}
+.pay-note{font-size:11px;color:var(--txt2);text-align:center;margin-top:8px;}
+.neworder-btn{width:100%;padding:13px;background:none;border:1px solid var(--border);border-radius:11px;font-size:14px;font-weight:700;font-family:inherit;color:var(--txt2);cursor:pointer;transition:all .2s;margin-top:8px;}
+.neworder-btn:hover{border-color:var(--accent);color:var(--accent);}
+.footer{text-align:center;font-size:12px;color:var(--txt2);padding:16px;opacity:.7;}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <h1>Bread from Kafri</h1>
+  <p class="tagline">Flour, water, natural sourdough & salt — handmade with love 🌾</p>
+  <div class="fresh-badge" id="fresh-badge">Baked fresh & delivered the same day 🌟</div>
+  <br>
+  <a class="lang-link" href="order-he.html">עברית →</a>
+</header>
+
+<!-- CLOSED SCREEN -->
+<div class="closed-screen" id="closed-screen">
+  <div style="font-size:52px;margin-bottom:14px;">🔒</div>
+  <h2 style="font-size:21px;font-weight:700;color:var(--brown);margin-bottom:10px;" id="closed-title">Orders are currently closed 🔒</h2>
+  <p style="font-size:14px;color:var(--txt2);line-height:1.6;" id="closed-msg">Orders for this week are closed. Check back soon!</p>
+</div>
+
+<!-- THANK YOU SCREEN -->
+<div class="ty-screen" id="ty-screen">
+  <div class="ty-card">
+    <div class="ty-icon">🎉</div>
+    <div class="ty-title" id="ty-title">Thank you for your order! 🎉</div>
+    <p class="ty-sub" id="ty-sub"></p>
+  </div>
+  <div class="section">
+    <div class="stitle">🧾 Order Summary</div>
+    <div id="ty-summary"></div>
+  </div>
+  <div class="pay-section">
+    <div class="stitle">💳 Payment</div>
+    <p style="font-size:13px;color:var(--txt2);margin-bottom:4px;">Please pay after we confirm your order:</p>
+    <div class="pay-grid">
+      <a class="pay-btn" href="https://venmo.com/code?user_id=4416788448151226881&created=1774894628" target="_blank">
+        <span class="pay-icon">💜</span> Venmo
+      </a>
+      <button class="pay-btn" onclick="showZelle()">
+        <span class="pay-icon">💙</span> Zelle
+      </button>
+    </div>
+    <p class="pay-note">* Pay only after receiving confirmation from us</p>
+  </div>
+  <button class="neworder-btn" onclick="resetForm()">Place a New Order</button>
+</div>
+
+<!-- FORM -->
+<div id="form-wrap">
+<div class="main">
+
+  <div class="sbanner" id="sbanner">
+    <span>👋</span>
+    <span id="sbanner-txt"></span>
+    <button onclick="clearSaved()" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:12px;color:var(--txt2);text-decoration:underline;">Clear</button>
+  </div>
+
+  <div class="section">
+    <div class="stitle">🛒 Choose Your Bread</div>
+    <div id="products-list"></div>
+  </div>
+
+  <div class="section">
+    <div class="stitle">🧾 Order Summary</div>
+    <div class="sumbox" id="order-summary">
+      <p class="sr empty">No products selected yet</p>
+    </div>
+    <div class="coupon-box" id="coupon-box"></div>
+  </div>
+
+  <div class="section">
+    <div class="stitle">👤 Your Details</div>
+    <div class="fg">
+      <div class="fr">
+        <div class="fi2"><label>Full Name</label><input type="text" id="f-name" autocomplete="name" oninput="autoSave()"></div>
+        <div class="fi2"><label>Phone</label><input type="tel" id="f-phone" autocomplete="tel" oninput="autoSave()"></div>
+      </div>
+      <div class="fi2"><label>Email (for order confirmation)</label><input type="email" id="f-email" autocomplete="email" oninput="autoSave()"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="stitle">🚗 Pickup or Delivery</div>
+    <div class="rg">
+      <label class="ro sel" onclick="selDelivery(this,'pickup')">
+        <input type="radio" name="delivery" value="pickup" checked>
+        <div class="rl">🏠 Self Pickup<div class="sub">68 Cortland Pl, Tenafly, NJ — please park on the street</div></div>
+      </label>
+      <label class="ro" onclick="selDelivery(this,'delivery')">
+        <input type="radio" name="delivery" value="delivery">
+        <div class="rl">🚗 Delivery (3+ loaves)<div class="sub">Within 10 minutes of Tenafly</div></div>
+      </label>
+    </div>
+    <div class="fi2" id="addr-field" style="margin-top:12px;display:none;">
+      <label>Delivery Address</label>
+      <input type="text" id="f-addr" autocomplete="street-address">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="stitle">🔪 Slicing</div>
+    <div class="tg" id="slice-group">
+      <button class="tb act" onclick="selSlice(this,'whole')">Whole — I'll slice at home</button>
+      <button class="tb" onclick="selSlice(this,'sliced')">Pre-sliced</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="stitle">💬 Notes</div>
+    <div class="fi2"><textarea id="f-notes" placeholder="Any special requests?"></textarea></div>
+  </div>
+
+  <button class="subbtn" id="sub-btn" onclick="submitOrder()" disabled>Place Order</button>
+
+</div>
+</div>
+
+<div class="footer">Bread from Kafri — ✉️ Questions? WhatsApp us</div>
+
+<script>
+const PRODUCTS = [{"id": "spelt", "he": "לחם כוסמין מלא מחמצת", "en": "Whole Spelt Sourdough", "badge_he": "פרווה", "badge_en": "Parve", "price": 12, "cal": 89, "carbs": 16, "protein": 3.5, "fat": 1.2, "ing_he": "קמח לחם, קמח כוסמין מלא, מים, מחמצת טבעית, מלח", "ing_en": "Bread flour, whole spelt flour, water, natural sourdough starter, salt", "pitch_he": "75% קמח כוסמין מלא עם מחמצת טבעית – עשיר בסיבים, מינרלים וחלבון. הכוסמין קל לעיכול והמחמצת מורידה את האינדקס הגליקמי.", "pitch_en": "75% whole spelt with natural sourdough — rich in fiber, minerals and protein. Spelt is easier to digest and the sourdough lowers the glycemic index."}, {"id": "nuts", "he": "לחם אגוזים", "en": "Walnut Sourdough", "badge_he": "פרווה", "badge_en": "Parve", "price": 10, "cal": 104, "carbs": 15, "protein": 3.8, "fat": 4.2, "ing_he": "קמח מלא, קמח לחם, מים, מחמצת טבעית, אגוזי מלך, מלח", "ing_en": "Whole wheat flour, bread flour, water, natural sourdough starter, walnuts, salt", "pitch_he": "מחמצת קמח מלא עם אגוזי מלך – מקור מצוין לאומגה 3, נוגדי חמצון וסיבים. אגוזי המלך מוסיפים שומן בריא ושובע ממושך.", "pitch_en": "Whole wheat sourdough with walnuts — excellent source of omega-3, antioxidants and fiber. Walnuts add healthy fat and lasting satiety."}, {"id": "olives", "he": "לחם זיתים", "en": "Olive Sourdough", "badge_he": "פרווה", "badge_en": "Parve", "price": 10, "cal": 85, "carbs": 15, "protein": 3.2, "fat": 1.8, "ing_he": "קמח מלא, קמח לחם, מים, מחמצת טבעית, זיתים, מלח", "ing_en": "Whole wheat flour, bread flour, water, natural sourdough starter, olives, salt", "pitch_he": "מחמצת קמח מלא עם זיתים – שומן חד-בלתי-רווי לבריאות הלב. הקל ביותר בסדרה, עשיר בטעם ים תיכוני.", "pitch_en": "Whole wheat sourdough with olives — heart-healthy monounsaturated fats. The lightest loaf in the range, full of Mediterranean flavor."}, {"id": "shiur", "he": "לחם שיאור", "en": "Pure Sourdough (Shiur)", "badge_he": "פרווה", "badge_en": "Parve", "price": 10, "cal": 89, "carbs": 17, "protein": 3.4, "fat": 0.8, "ing_he": "קמח לחם, קמח מלא, מים, מחמצת טבעית, מלח", "ing_en": "Bread flour, whole wheat flour, water, natural sourdough starter, salt", "pitch_he": "ארבעה מרכיבים בלבד. המחמצת מפרקת פיטאטים, משפרת ספיגת מינרלים ומורידה את האינדקס הגליקמי. נקי, פשוט ומזין.", "pitch_en": "Four ingredients only. The sourdough breaks down phytates, improves mineral absorption and lowers the glycemic index. Clean and nourishing."}, {"id": "kasten", "he": "לחם קסטן בריאות", "en": "Kasten Health Loaf", "badge_he": "פרווה ⭐", "badge_en": "Parve ⭐", "price": 12, "cal": 94, "carbs": 17, "protein": 3.5, "fat": 1.5, "ing_he": "קמח לחם, מים, קמח מלא, פתיתי שיבולת שועל, מלח, סוכר, שמן, שמרים", "ing_en": "Bread flour, water, whole wheat flour, rolled oats, salt, sugar, oil, yeast", "pitch_he": "קמח לחם, קמח מלא ושיבולת שועל – הבטא-גלוקן שבשיבולת שועל מאזן סוכר וכולסטרול. נאפה בתבנית סגורה לפרוסות אחידות לסנדוויץ׳.", "pitch_en": "Bread flour, whole wheat and oats — oat beta-glucan helps balance blood sugar and cholesterol. Baked in closed tin for perfect sandwich slices."}, {"id": "bagel-white", "he": "בייגל ירושלמי לבן (3 במנה)", "en": "Jerusalem Bagels – White (3 pack)", "badge_he": "פרווה", "badge_en": "Parve", "price": 10, "cal": 283, "carbs": 38, "protein": 7.2, "fat": 5.8, "ing_he": "קמח לחם, מים, שמן זית, סוכר, מלח, שמרים יבשים, שומשום לבן", "ing_en": "Bread flour, water, olive oil, sugar, salt, dry yeast, white sesame", "pitch_he": "ישר מרחובות ירושלים. פריך מבחוץ, רך מבפנים. ציפוי שומשום עשיר בסידן, ברזל וויטמין E.", "pitch_en": "Straight from Jerusalem. Crispy outside, soft inside. Sesame coating rich in calcium, iron and vitamin E.", "cal_label_he": "קל׳ למקל", "cal_label_en": "cal/bagel"}, {"id": "rolls-school", "he": "לחמניות בית ספר (5 במנה)", "en": "School Rolls (5-pack)", "badge_he": "פרווה", "badge_en": "Parve", "price": 10, "cal": 230, "carbs": 42, "protein": 7, "fat": 4, "ing_he": "קמח לבן אורגני, קמח סמולינה אורגני, מים, שמרים יבשים, מלח, שמן", "ing_en": "Organic white flour, organic semolina flour, water, dry yeast, salt, oil", "pitch_he": "לחמניות רכות ועדינות שנאפו במיוחד לתיק האוכל של בית הספר, מקמחים אורגניים איכותיים. תערובת קמח לבן וסמולינה מעניקה מרקם רך עם נגיעת מתיקות טבעית — בלי חלב או ביצים, פרווה ומושלמות לכל ארוחה.", "pitch_en": "Soft, gentle rolls made with quality organic flours, perfect for the school lunchbox. A blend of white and semolina flour gives a tender crumb with a natural touch of sweetness — dairy-free and pareve, perfect for any meal.", "cal_label_he": "קל׳ ללחמנייה", "cal_label_en": "cal/roll"}, {"id": "health", "he": "לחם בריאות", "en": "Health Loaf", "badge_he": "גלוטן נמוך", "badge_en": "Low Gluten", "price": 12, "cal": 96, "carbs": 15, "protein": 3.8, "fat": 2.1, "ing_he": "קמח כוסמין מלא, קמח לחם, מים, מחמצת טבעית, פתיתי שיבולת שועל, זרעי פשתן, מלח", "ing_en": "Whole spelt flour, bread flour, water, natural sourdough starter, rolled oats, flaxseed, salt", "pitch_he": "כוסמין מלא, שיבולת שועל וזרעי פשתן – שלושה מקורות סיבים בלחם אחד. פשתן עשיר באומגה 3 ולינגנים. מכיל מעט גלוטן בלבד.", "pitch_en": "Whole spelt, oats and flaxseed — three fiber sources in one loaf. Flaxseed rich in omega-3 and lignans. Low gluten only."}];
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzdF03GIEPXnSFvwKc5II8BhyXX4QUGljF9IRlkOvewwQh6X70_gsh7iogZbrBhB4vUg/exec';
+const VENMO_URL = 'https://venmo.com/code?user_id=4416788448151226881&created=1774894628';
+const FORM_KEY = 'lm_form_status_en';
+const IS_HE = false;
+const BAKE_LINE = 'sourdough';
+const FORM_NAME = 'bread-en';
+
+let qtys = {};
+let deliveryMode = 'pickup';
+let sliceMode = 'whole';
+let appliedCoupon = null; // { code, discount, minOrder, label }
+PRODUCTS.forEach(p => qtys[p.id] = 0);
+
+// ADMIN SETTINGS
+function loadAdminSettings() {
+  try {
+    const raw = localStorage.getItem('lm_admin_settings');
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    if (s.bakingDate || s.deliveryDate) {
+      // Check that date is not in the past
+      const refDate = s.bakingDate || s.deliveryDate;
+      const ref = new Date(refDate + 'T12:00:00');
+      const today = new Date(); today.setHours(0,0,0,0);
+      if (ref < today) {
+        document.getElementById('fresh-badge').style.display = 'none';
+      } else {
+        let badge = IS_HE ? 'נאפה טרי ומסופק באותו היום 🌟' : 'Baked fresh & delivered the same day 🌟';
+        if (s.bakingDate) {
+          const d = new Date(s.bakingDate + 'T12:00:00');
+          const locale = IS_HE ? 'he-IL' : 'en-US';
+          badge = (IS_HE ? '🔥 אפייה: ' : '🔥 Baking: ') + d.toLocaleDateString(locale, {weekday:'long', day:'numeric', month:'long'});
+        }
+        if (s.deliveryDate) {
+          const d = new Date(s.deliveryDate + 'T12:00:00');
+          const locale = IS_HE ? 'he-IL' : 'en-US';
+          badge += (IS_HE ? ' · משלוח/איסוף: ' : ' · Pickup/Delivery: ') + d.toLocaleDateString(locale, {weekday:'long', day:'numeric', month:'long'});
+          if (s.deliveryTime) badge += ' ' + s.deliveryTime;
+        }
+        document.getElementById('fresh-badge').textContent = badge;
+      }
+    } else {
+      document.getElementById('fresh-badge').style.display = 'none';
+    }
+    if (s.products) {
+      PRODUCTS.forEach(p => {
+        const ps = s.products[p.id];
+        if (!ps) return;
+        if (ps.price) p.price = ps.price;
+        p.soldOut = ps.soldOut || false;
+        p.hidden  = !ps.visible && ps.visible !== undefined;
+      });
+    }
+  } catch(e) {}
+}
+
+// CHECK FORM CLOSED — checks the server (source of truth), with localStorage as backup
+async function checkFormStatus() {
+  let displayedClosed = false;
+
+  // Step 1: quick local check (backup) — if localStorage says closed, show immediately
+  try {
+    const raw = localStorage.getItem(FORM_KEY);
+    if (raw) {
+      const s = JSON.parse(raw);
+      if (s.closed) {
+        showClosedScreen(s.msgHe, s.msgEn);
+        displayedClosed = true;
+      }
+    }
+  } catch(e) {}
+
+  // Step 2: check the server — source of truth
+  try {
+    const formName = IS_HE ? 'bread-he' : 'bread-en';
+    const res = await fetch(SCRIPT_URL + '?action=status&form=' + formName);
+    const data = await res.json();
+
+    if (data.closed) {
+      if (!displayedClosed) showClosedScreen(data.msgHe, data.msgEn);
+      try { localStorage.setItem(FORM_KEY, JSON.stringify({closed: true, msgHe: data.msgHe, msgEn: data.msgEn})); } catch(e) {}
+    } else {
+      if (displayedClosed) {
+        document.getElementById('closed-screen').classList.remove('show');
+        document.getElementById('form-wrap').style.display = 'block';
+      }
+      try { localStorage.setItem(FORM_KEY, JSON.stringify({closed: false})); } catch(e) {}
+    }
+  } catch(err) {
+    console.warn('Form status check from server failed:', err);
+  }
+}
+
+function showClosedScreen(msgHe, msgEn) {
+  document.getElementById('form-wrap').style.display = 'none';
+  const cs = document.getElementById('closed-screen');
+  cs.classList.add('show');
+  if (msgHe && IS_HE) document.getElementById('closed-msg').textContent = msgHe;
+  if (msgEn && !IS_HE) document.getElementById('closed-msg').textContent = msgEn;
+}
+
+// RENDER PRODUCTS
+function renderProducts() {
+  const c = document.getElementById('products-list');
+  c.innerHTML = PRODUCTS.filter(p => !p.hidden).map(p => {
+    const calLbl  = IS_HE ? (p.cal_label_he || 'קל׳ לפרוסה') : (p.cal_label_en || 'cal/slice');
+    const badge   = IS_HE ? p.badge_he : p.badge_en;
+    const name    = IS_HE ? p.he : p.en;
+    const pitch   = IS_HE ? p.pitch_he : p.pitch_en;
+    const ing     = IS_HE ? p.ing_he : p.ing_en;
+    // Unavailable tag — two possible causes: stock ran out, or the admin manually blocked this
+    // product for this baking day (Feature 1)
+    const unavailTag = p.blockedManually
+      ? `<span style="font-size:11px;color:var(--red);font-weight:700;margin-right:4px;">${IS_HE?'לא זמין להזמנה':'Currently Unavailable'}</span>`
+      : (p.soldOut ? `<span style="font-size:11px;color:var(--red);font-weight:700;margin-right:4px;">${IS_HE?'אזל':'Sold Out'}</span>` : '');
+
+    // ── Baker's Special — special styling ──
+    if (p.isBakerSpecial) {
+      return `<div class="pacc" style="border:2px solid var(--accent);border-radius:12px;margin-bottom:8px;background:var(--warm);">
+        <div class="pmain">
+          <div class="pinfo">
+            <div style="font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.5px;margin-bottom:4px;">⭐ BAKER'S SPECIAL THIS WEEK</div>
+            <div class="pname" style="${p.soldOut?'opacity:.45;text-decoration:line-through':''}">${name}</div>
+            <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:3px;">
+              <span class="pbadge" style="background:var(--accent);color:white;border-color:var(--accent);">${badge}</span>
+              ${unavailTag}
+            </div>
+            ${pitch ? `<div style="font-size:12px;color:var(--txt2);line-height:1.5;margin-top:6px;font-style:italic;">${pitch}</div>` : ''}
+            <div style="font-size:11px;color:var(--txt2);margin-top:4px;">Remaining: ${p.remaining}</div>
+          </div>
+          <div class="pprice">$${p.price}</div>
+          <div class="qty">
+            <button class="qbtn" onclick="chQty('${p.id}',-1)" ${p.soldOut?'disabled':''}>−</button>
+            <div class="qnum" id="q-${p.id}">0</div>
+            <button class="qbtn" onclick="chQty('${p.id}',1)" ${p.soldOut?'disabled':''}>+</button>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // ── Regular product ──
+    return `<div class="pacc">
+      <div class="pmain">
+        <div class="pinfo">
+          <div class="pname" style="${p.soldOut?'opacity:.45;text-decoration:line-through':''}">${name}</div>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:3px;">
+            <span class="pbadge">${badge}</span>
+            ${unavailTag}
+            ${p.cal != null ? `<button class="pinfo-btn" onclick="togDet('${p.id}',this)">${IS_HE?'פרטים תזונתיים':'Nutrition info'} <i class="arr">▾</i></button>` : ''}
+          </div>
+          <div style="font-size:12px;color:var(--txt2);line-height:1.5;margin-top:5px;">${pitch}</div>
+        </div>
+        <div class="pprice">$${p.price}</div>
+        <div class="qty">
+          <button class="qbtn" onclick="chQty('${p.id}',-1)" ${p.soldOut?'disabled':''}>−</button>
+          <div class="qnum" id="q-${p.id}">0</div>
+          <button class="qbtn" onclick="chQty('${p.id}',1)" ${p.soldOut?'disabled':''}>+</button>
+        </div>
+      </div>
+      <div class="pdet" id="d-${p.id}">
+        <p class="ppitch">${pitch}</p>
+        <div class="ngrid">
+          <div class="ncell"><span class="nval">${p.cal}</span><span class="nlbl">${calLbl}</span></div>
+          <div class="ncell"><span class="nval">${p.carbs}g</span><span class="nlbl">${IS_HE?'פחמימות':'Carbs'}</span></div>
+          <div class="ncell"><span class="nval">${p.protein}g</span><span class="nlbl">${IS_HE?'חלבון':'Protein'}</span></div>
+          <div class="ncell"><span class="nval">${p.fat}g</span><span class="nlbl">${IS_HE?'שומן':'Fat'}</span></div>
+        </div>
+        <div class="ilbl">${IS_HE?'מרכיבים':'Ingredients'}</div>
+        <div class="ilst">${ing}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togDet(id, btn) {
+  const d = document.getElementById('d-' + id);
+  const o = d.classList.contains('open');
+  d.classList.toggle('open', !o);
+  btn.classList.toggle('open', !o);
+}
+
+
+// LOAD STOCK FROM SCRIPT
+async function loadStock() {
+  try {
+    const data = await fetchBakeDay();
+    if (!data.success) throw new Error(data.error || 'bakeday failed');
+    BAKE = data;
+    renderBakeBadge(data);
+    if (!data.date || !data.open) { showBakeClosed(data); return; }
+    PRODUCTS.forEach(p => {
+      if (p.id === 'baker-special') return;
+      const s = data.stock[p.id];
+      p.hidden = !s;               // לא בתפריט של יום האפייה הזה
+      if (!s) return;
+      p.remaining = s.remaining;
+      p.maxStock  = s.max;
+      // Manual block from the dashboard (Feature 1) — stays visible, but not orderable
+      p.blockedManually = !!s.blocked;
+      p.soldOut = s.remaining <= 0 || !!s.blocked;
+    });
+
+    // Baker's Special — dynamic from sheet
+    const existingIdx = PRODUCTS.findIndex(p => p.id === 'baker-special');
+    if (existingIdx >= 0) PRODUCTS.splice(existingIdx, 1);
+    const special = data.stock['baker-special'];
+    if (special && special.remaining > 0 && !special.blocked && special.nameHe) {
+      PRODUCTS.unshift({
+        id: 'baker-special',
+        he: special.nameHe,
+        en: special.nameEn || special.nameHe,
+        badge_he: '⭐ לחם האופה',
+        badge_en: "⭐ Baker's Special",
+        price:    special.price || 10,
+        pitch_he: special.descHe || '',
+        pitch_en: special.descEn || '',
+        ing_he: '', ing_en: '',
+        cal: null,
+        remaining: special.remaining,
+        isBakerSpecial: true,
+      });
+      if (qtys['baker-special'] === undefined) qtys['baker-special'] = 0;
+    } else {
+      qtys['baker-special'] = 0;
+    }
+
+    syncQtysToStock();
+    renderProducts();
+    syncQtyDisplays();
+    updateSummary();
+    updateSubmit();
+  } catch(e) {
+    console.warn('Bake day load failed:', e);
+    renderProducts();
+  }
+}
+function chQty(id, delta) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (p && p.soldOut) return;
+  // בדיקת מלאי מהסקריפט
+  if (delta > 0 && p && p.remaining !== undefined) {
+    const alreadyInCart = qtys[id];
+    if (alreadyInCart >= p.remaining) return;
+  }
+  qtys[id] = Math.max(0, qtys[id] + delta);
+  document.getElementById('q-' + id).textContent = qtys[id];
+  updateSummary();
+  updateSubmit();
+}
+
+function getSubtotal() { return PRODUCTS.reduce((s, p) => s + p.price * qtys[p.id], 0); }
+
+function updateSummary() {
+  const box = document.getElementById('order-summary');
+  const sel = PRODUCTS.filter(p => qtys[p.id] > 0);
+  const subtotal = getSubtotal();
+
+  // If the order dropped below the applied coupon's minimum — remove it automatically
+  if (appliedCoupon && subtotal < appliedCoupon.minOrder) {
+    appliedCoupon = null;
+    renderCouponWidget(IS_HE ? 'ההזמנה ירדה מתחת לסכום המינימום — הקופון הוסר.' : 'Order dropped below the coupon minimum — coupon removed.', true);
+  }
+
+  const discount = appliedCoupon ? Math.min(appliedCoupon.discount, subtotal) : 0;
+  const total = subtotal - discount;
+
+  if (!sel.length) {
+    box.innerHTML = `<p class="sr empty">${IS_HE ? 'לא נבחרו מוצרים עדיין' : 'No products selected yet'}</p>`;
+  } else {
+    let html = sel.map(p => `
+      <div class="sr">
+        <span>${IS_HE ? p.he.split('(')[0].trim() : p.en.split('(')[0].trim()} × ${qtys[p.id]}</span>
+        <span>$${p.price * qtys[p.id]}</span>
+      </div>`).join('');
+    if (discount > 0) {
+      html += `<div class="sr" style="color:var(--green);">
+        <span>${IS_HE ? 'הנחת קופון' : 'Coupon discount'} (${appliedCoupon.code})</span>
+        <span>−$${discount}</span>
+      </div>`;
+    }
+    html += `<hr class="sdiv">
+    <div class="sr stot">
+      <span>${IS_HE ? 'סה\"כ' : 'Total'}</span>
+      <span>$${total}</span>
+    </div>`;
+    box.innerHTML = html;
+  }
+}
+
+function getTotal() {
+  const subtotal = getSubtotal();
+  if (appliedCoupon) return Math.max(0, subtotal - appliedCoupon.discount);
+  return subtotal;
+}
+function updateSubmit() { document.getElementById('sub-btn').disabled = !PRODUCTS.some(p => qtys[p.id] > 0); }
+
+// ── Coupon (Feature 2) ──
+function buildQtyParams() {
+  const params = new URLSearchParams();
+  PRODUCTS.forEach(p => params.append('qty_' + p.id, qtys[p.id] || 0));
+  return params;
+}
+
+function renderCouponWidget(message, isError) {
+  const box = document.getElementById('coupon-box');
+  if (!box) return;
+  if (appliedCoupon) {
+    box.innerHTML = `<div class="coupon-applied">
+      <span>🎟️ ${appliedCoupon.code} — $${appliedCoupon.discount} ${IS_HE?'הנחה':'off'}</span>
+      <button type="button" onclick="removeCoupon()">${IS_HE?'הסר':'Remove'}</button>
+    </div>`;
+  } else {
+    box.innerHTML = `<div class="coupon-row">
+      <input type="text" id="f-coupon" placeholder="${IS_HE?'קוד קופון (אופציונלי)':'Coupon code (optional)'}">
+      <button type="button" class="coupon-btn" onclick="applyCoupon()">${IS_HE?'החל':'Apply'}</button>
+    </div>
+    <p class="coupon-msg${isError?' err':''}" id="coupon-msg">${message||''}</p>`;
+  }
+}
+
+async function applyCoupon() {
+  const codeInput = document.getElementById('f-coupon');
+  const code = codeInput ? codeInput.value.trim() : '';
+  if (!code) { renderCouponWidget(IS_HE?'הכנס קוד קופון.':'Enter a coupon code.', true); return; }
+  renderCouponWidget(IS_HE?'בודק...':'Checking...', false);
+  try {
+    const params = buildQtyParams();
+    params.set('action', 'checkCoupon');
+    params.set('form', IS_HE ? 'bread-he' : 'bread-en');
+    params.set('code', code);
+    const res = await fetch(SCRIPT_URL + '?' + params.toString());
+    const data = await res.json();
+
+    if (data.success && data.valid) {
+      appliedCoupon = { code: code.trim().toUpperCase(), discount: data.discount, minOrder: data.minOrder, label: data.label };
+      renderCouponWidget();
+      updateSummary();
+    } else {
+      const reasons = {
+        not_found:     IS_HE ? 'קוד קופון לא נמצא.' : 'Coupon code not found.',
+        inactive:      IS_HE ? 'קופון זה לא פעיל.' : 'This coupon is not active.',
+        wrong_form:    IS_HE ? 'קופון זה לא רלוונטי לטופס הזה.' : 'This coupon does not apply to this form.',
+        below_minimum: IS_HE ? `ההזמנה מתחת לסכום המינימום לקופון ($${data.minOrder||0}).` : `Order is below the coupon minimum ($${data.minOrder||0}).`,
+        missing_code:  IS_HE ? 'הכנס קוד קופון.' : 'Enter a coupon code.',
+      };
+      const reason = data.success ? (reasons[data.reason] || (IS_HE?'קוד לא תקף.':'Invalid code.')) : (IS_HE?'שגיאה בבדיקת הקופון.':'Error checking coupon.');
+      renderCouponWidget(reason, true);
+    }
+  } catch(e) {
+    renderCouponWidget(IS_HE?'שגיאת רשת — נסה שוב.':'Network error — try again.', true);
+  }
+}
+
+function removeCoupon() {
+  appliedCoupon = null;
+  renderCouponWidget();
+  updateSummary();
+}
+
+function selDelivery(el, mode) {
+  deliveryMode = mode;
+  document.querySelectorAll('.ro').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('addr-field').style.display = mode === 'delivery' ? 'block' : 'none';
+  updateSubmit();
+}
+
+function selSlice(el, mode) {
+  sliceMode = mode;
+  document.querySelectorAll('#slice-group .tb').forEach(b => b.classList.remove('act'));
+  el.classList.add('act');
+}
+
+function validate() {
+  if (!PRODUCTS.some(p => qtys[p.id] > 0)) { alert(IS_HE ? 'אנא בחר לפחות מוצר אחד.' : 'Please select at least one product.'); return false; }
+  if (!document.getElementById('f-name').value.trim()) { alert(IS_HE ? 'אנא הכנס שם מלא.' : 'Please enter your name.'); document.getElementById('f-name').focus(); return false; }
+  if (!document.getElementById('f-phone').value.trim()) { alert(IS_HE ? 'אנא הכנס מספר טלפון.' : 'Please enter your phone number.'); document.getElementById('f-phone').focus(); return false; }
+  if (deliveryMode === 'delivery' && !document.getElementById('f-addr').value.trim()) { alert(IS_HE ? 'אנא הכנס כתובת למשלוח.' : 'Please enter delivery address.'); document.getElementById('f-addr').focus(); return false; }
+  return true;
+}
+
+async function submitOrder() {
+  if (!validate()) return;
+  const name  = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const addr  = document.getElementById('f-addr').value.trim();
+  const notes = document.getElementById('f-notes').value.trim();
+  const sel   = PRODUCTS.filter(p => qtys[p.id] > 0);
+  const total = getTotal();
+
+  localStorage.setItem('lm_customer', JSON.stringify({name, phone, email}));
+
+  const btn = document.getElementById('sub-btn');
+  btn.disabled = true;
+  btn.textContent = IS_HE ? 'שולח...' : 'Sending...';
+
+  const params = new URLSearchParams({
+    name, phone, email, addr, notes, total,
+    lang: IS_HE ? 'he' : 'en',
+    delivery: deliveryMode === 'delivery' ? (IS_HE ? 'משלוח' : 'Delivery') : (IS_HE ? 'איסוף עצמי' : 'Self Pickup'),
+    slicing: sliceMode === 'sliced' ? (IS_HE ? 'פרוס' : 'Pre-sliced') : (IS_HE ? 'שלם' : 'Whole'),
+    products: sel.map(p => (IS_HE ? p.he : p.en).split('(')[0].trim() + ' x ' + qtys[p.id]).join('|')
+  });
+  if (appliedCoupon) params.set('coupon', appliedCoupon.code);
+  params.set('form', FORM_NAME);
+  if (BAKE && BAKE.date) params.set('bakeDate', BAKE.date);
+  PRODUCTS.forEach(p => params.append('qty_' + p.id, qtys[p.id] || 0));
+
+  try {
+    const res = await fetch(SCRIPT_URL + '?' + params.toString(), {
+      method: 'GET',
+      redirect: 'follow'
+    });
+    const data = await res.json();
+
+    if (data.success === true) {
+      showThankYou(name, sel, total, email);
+      bakeThankYouNote(data);
+    } else if (handleBakeError(data)) {
+      btn.disabled = false;
+      btn.textContent = IS_HE ? 'שלח הזמנה' : 'Place Order';
+    } else if (data.error === 'form_closed') {
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('closed-screen').classList.add('show');
+      window.scrollTo(0, 0);
+    } else if (data.error === 'invalid_coupon') {
+      alert(IS_HE
+        ? 'הקופון שהוחל אינו תקף יותר להזמנה זו (ייתכן שהמלאי/הזמינות השתנו). אנא הסר את הקופון ונסה לשלוח שוב.'
+        : 'The applied coupon is no longer valid for this order. Please remove it and try again.');
+      btn.disabled = false;
+      btn.textContent = IS_HE ? 'שלח הזמנה' : 'Place Order';
+    } else {
+      alert(IS_HE
+        ? 'אופס, משהו השתבש בשליחת ההזמנה. נסה שוב בעוד רגע או פנה בוואטסאפ.\n\n' + (data.error || '')
+        : 'Oops, something went wrong sending your order. Please try again in a moment or contact us on WhatsApp.\n\n' + (data.error || ''));
+      btn.disabled = false;
+      btn.textContent = IS_HE ? 'שלח הזמנה' : 'Place Order';
+    }
+  } catch(err) {
+    console.error('Order submit failed:', err);
+    alert(IS_HE
+      ? 'לא הצלחנו להגיע לשרת. בדוק חיבור אינטרנט ונסה שוב, או פנה בוואטסאפ.'
+      : 'We couldn\'t reach the server. Check your internet and try again, or contact us on WhatsApp.');
+    btn.disabled = false;
+    btn.textContent = IS_HE ? 'שלח הזמנה' : 'Place Order';
+  }
+}
+
+function showThankYou(name, sel, total, email) {
+  document.getElementById('form-wrap').style.display = 'none';
+  const ty = document.getElementById('ty-screen');
+  ty.classList.add('show');
+  document.getElementById('ty-sub').textContent = IS_HE
+    ? `ההזמנה של ${name} התקבלה!${email ? ' אישור ישלח למייל שלך.' : ''}`
+    : `${name}'s order has been received!${email ? ' A confirmation will be sent to your email.' : ''}`;
+  document.getElementById('ty-summary').innerHTML =
+    sel.map(p => `<div class="sr"><span>${IS_HE ? p.he.split('(')[0].trim() : p.en.split('(')[0].trim()} × ${qtys[p.id]}</span><span>$${p.price * qtys[p.id]}</span></div>`).join('') +
+    `<hr class="sdiv"><div class="sr stot"><span>${IS_HE ? 'סה\"כ' : 'Total'}</span><span>$${total}</span></div>`;
+}
+
+function showZelle() {
+  alert(IS_HE
+    ? 'שלם דרך Zelle ל:\n[הכנס מספר טלפון או אימייל]\nסכום: $' + getTotal()
+    : 'Pay via Zelle to:\n[Enter phone or email]\nAmount: $' + getTotal());
+}
+
+function resetForm() {
+  PRODUCTS.forEach(p => qtys[p.id] = 0);
+  deliveryMode = 'pickup'; sliceMode = 'whole';
+  appliedCoupon = null;
+  renderCouponWidget();
+  ['f-name','f-phone','f-email','f-addr','f-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ty-screen').classList.remove('show');
+  document.getElementById('form-wrap').style.display = 'block';
+  renderProducts(); updateSummary();
+  document.getElementById('sub-btn').disabled = true;
+  window.scrollTo(0, 0);
+}
+
+function autoSave() {
+  const name  = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  if (name || phone || email) localStorage.setItem('lm_customer', JSON.stringify({name, phone, email}));
+}
+
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem('lm_customer');
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    if (!s.name) return;
+    document.getElementById('f-name').value  = s.name;
+    document.getElementById('f-phone').value = s.phone || '';
+    document.getElementById('f-email').value = s.email || '';
+    const banner = document.getElementById('sbanner');
+    document.getElementById('sbanner-txt').textContent = IS_HE
+      ? `ברוך הבא חזרה, ${s.name}! הפרטים שלך כבר ממולאים.`
+      : `Welcome back, ${s.name}! Your details are pre-filled.`;
+    banner.classList.add('show');
+  } catch(e) {}
+}
+
+function clearSaved() {
+  localStorage.removeItem('lm_customer');
+  document.getElementById('sbanner').classList.remove('show');
+  ['f-name','f-phone','f-email'].forEach(id => document.getElementById(id).value = '');
+}
+
+
+// ===== v10 — לוח ימי אפייה: יום אפייה אחד פתוח בכל רגע (Bake calendar) =====
+let BAKE = null;
+function bakeTxt(he, en) { return IS_HE ? he : en; }
+async function fetchBakeDay() {
+  const res = await fetch(SCRIPT_URL + '?action=bakeday&line=' + BAKE_LINE + '&form=' + FORM_NAME);
+  return res.json();
+}
+function renderBakeBadge(d) {
+  const b = document.getElementById('fresh-badge') || document.getElementById('bake-badge'); if (!b) return;
+  b.style.display = '';
+  if (!d || !d.date) return;
+  b.textContent = d.open
+    ? bakeTxt(`🔥 הזמנות לאפייה של ${d.dateHe} · ההזמנות נסגרות ${d.cutoffHe}`, `🔥 Ordering for ${d.dateEn} · closes ${d.cutoffEn}`)
+    : bakeTxt(`ההזמנות ל${d.dateHe} סגורות`, `Orders for ${d.dateEn} are closed`);
+}
+function showBakeClosed(d) {
+  document.getElementById('form-wrap').style.display = 'none';
+  const cs = document.getElementById('closed-screen');
+  cs.classList.add('show');
+  const title = cs.querySelector('h2'), msg = cs.querySelector('p');
+  if (d && d.date) {
+    const custom = IS_HE ? d.msgHe : d.msgEn;
+    const nxt = d.next
+      ? bakeTxt(`ההזמנות ל${d.next.dateHe} ייפתחו ${d.next.opensHe}.`, `Orders for ${d.next.dateEn} open ${d.next.opensEn}.`)
+      : '';
+    if (title) title.textContent = bakeTxt(`ההזמנות ל${d.dateHe} סגורות 🔒`, `Orders for ${d.dateEn} are closed 🔒`);
+    if (msg) msg.textContent = (custom ? custom + ' ' : bakeTxt('אזל — תודה לכולם! ', 'Sold out — thank you all! ')) + nxt;
+  } else {
+    if (title) title.textContent = bakeTxt('אין כרגע ימי אפייה פתוחים 🔒', 'No bake days are open right now 🔒');
+    if (msg) msg.textContent = bakeTxt('נחזור בקרוב!', 'Check back soon!');
+  }
+  window.scrollTo(0, 0);
+}
+function showMenuLoading() {
+  const c = document.getElementById('products-list');
+  if (c) c.innerHTML = `<p style="text-align:center;color:var(--txt2);font-size:14px;padding:18px 0;">${bakeTxt('טוען את התפריט של יום האפייה…', "Loading this bake day's menu…")}</p>`;
+}
+// אחרי עדכון מלאי: מוצרים שירדו מהתפריט/אזלו מתאפסים, כמויות לא עולות על הנותר
+function syncQtysToStock() {
+  PRODUCTS.forEach(p => {
+    if (!qtys[p.id]) return;
+    if (p.hidden || p.soldOut) qtys[p.id] = 0;
+    else if (p.remaining !== undefined && qtys[p.id] > p.remaining) qtys[p.id] = p.remaining;
+  });
+}
+function syncQtyDisplays() {
+  PRODUCTS.forEach(p => {
+    const el = document.getElementById('q-' + p.id) || document.getElementById('qn-' + p.id);
+    if (el) el.textContent = qtys[p.id] || 0;
+  });
+}
+// שגיאות מהשרת שקשורות ליום האפייה — מחזיר true אם טופל
+function handleBakeError(data) {
+  const pname = data.nameHe ? (IS_HE ? data.nameHe : data.nameEn).split('(')[0].trim() : '';
+  if (data.error === 'day_closed') { BAKE = data.state || BAKE; renderBakeBadge(BAKE); showBakeClosed(data.state); return true; }
+  if (data.error === 'day_changed' && data.state) {
+    alert(bakeTxt(`ההזמנות עברו ליום האפייה הבא (${data.state.dateHe}). העמוד יתרענן — בדקו את ההזמנה ושלחו שוב.`,
+                  `Ordering has moved to the next bake day (${data.state.dateEn}). The page will refresh — please review your order and send it again.`));
+    location.reload(); return true;
+  }
+  if (data.error === 'sold_out') {
+    alert(bakeTxt(`נשארו רק ${data.remaining} של "${pname}". עדכנו את הכמות ושלחו שוב.`, `Only ${data.remaining} left of "${pname}". Please update the quantity and send again.`));
+    loadStock(); return true;
+  }
+  if (data.error === 'unavailable') {
+    alert(bakeTxt(`"${pname}" לא זמין ליום האפייה הזה. הסרנו אותו מההזמנה.`, `"${pname}" isn't available for this bake day. We removed it from your order.`));
+    loadStock(); return true;
+  }
+  if (data.error === 'delivery_minimum' || data.error === 'delivery_min') {
+    alert(bakeTxt(`משלוח זמין להזמנות מ-$${data.min} ומעלה.`, `Delivery is available for orders of $${data.min} or more.`));
+    return true;
+  }
+  return false;
+}
+function bakeThankYouNote(data) {
+  const el = document.getElementById('ty-sub');
+  if (!el || !data || !data.bakeDate) return;
+  el.textContent += ' ' + bakeTxt(`📅 יום האפייה: ${data.bakeDateHe}.`, `📅 Bake day: ${data.bakeDateEn}.`);
+}
+
+// INIT
+showMenuLoading();
+updateSummary();
+renderCouponWidget();
+loadSaved();
+loadStock();
+</script>
+</body>
+</html>

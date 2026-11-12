@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Lechem Mikfari</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#FAF6EF; --brown:#5C3D2E; --accent:#C17D3C; --accent-l:#E8C99A;
+  --accent-h:#A66828; --txt:#2C1A0E; --txt2:#7A5C44; --border:#DDD0BF;
+  --bg:#FFFFFF; --warm:#FDF5E8; --green:#2E7D32; --green-bg:#E8F5E9;
+  --red:#C0392B; --red-bg:#FDEDEC; --font:'Lato',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);font-family:var(--font);color:var(--txt);min-height:100vh;}
+
+/* LOGIN */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-card{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:40px 36px;width:100%;max-width:380px;text-align:center;}
+.login-icon{font-size:48px;margin-bottom:12px;}
+.login-title{font-size:22px;font-weight:900;color:var(--brown);margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--txt2);margin-bottom:28px;}
+.login-field{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;text-align:left;}
+.login-field label{font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;}
+.login-field input{padding:12px 16px;border:1px solid var(--border);border-radius:10px;font-size:15px;font-family:var(--font);color:var(--txt);outline:none;transition:border-color .2s,box-shadow .2s;}
+.login-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(193,125,60,.12);}
+.login-error{font-size:13px;color:var(--red);margin-bottom:12px;min-height:20px;}
+.btn-primary{width:100%;padding:13px;background:var(--accent);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background .2s;}
+.btn-primary:hover{background:var(--accent-h);}
+
+/* ADMIN */
+.admin-app{display:none;}
+.admin-app.show{display:block;}
+.header{background:var(--brown);color:#fff;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;}
+.header-left{display:flex;align-items:center;gap:12px;}
+.header-icon{font-size:28px;}
+.header-title{font-size:20px;font-weight:900;}
+.header-sub{font-size:12px;opacity:.7;margin-top:1px;}
+.logout-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;border-radius:20px;padding:6px 16px;cursor:pointer;font-size:12px;font-family:var(--font);font-weight:700;transition:background .2s;}
+.logout-btn:hover{background:rgba(255,255,255,.25);}
+.main{max-width:820px;margin:0 auto;padding:28px 16px 80px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--brown);color:white;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:700;z-index:999;transition:transform .3s ease;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.error{background:var(--red);}
+
+/* SECTION */
+.section{background:var(--bg);border-radius:16px;border:1px solid var(--border);padding:24px;margin-bottom:20px;}
+.section-title{font-size:14px;font-weight:900;color:var(--brown);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.5px;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;max-width:340px;}
+.stat-card{background:var(--warm);border:1px solid var(--accent-l);border-radius:12px;padding:14px 12px;text-align:center;}
+.stat-value{font-size:26px;font-weight:900;color:var(--brown);display:block;}
+.stat-label{font-size:10px;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+/* TABS */
+.tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid var(--border);}
+.tab{padding:10px 20px;cursor:pointer;font-size:13px;font-weight:700;color:var(--txt2);border:none;background:none;font-family:var(--font);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;}
+.tab:hover{color:var(--brown);}
+.tab.active{color:var(--brown);border-bottom-color:var(--accent);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* DATE GRID */
+.date-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:480px){.date-grid{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;}
+.field input,.field select{padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:var(--font);color:var(--txt);background:white;outline:none;transition:border-color .2s,box-shadow .2s;}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(193,125,60,.12);}
+.fresh-preview{margin-top:14px;padding:12px 16px;background:var(--warm);border:1px solid var(--accent-l);border-radius:10px;font-size:13px;color:var(--brown);font-weight:700;}
+
+/* PRODUCT TABLE (Hala tab — decorative, localStorage-only, unchanged for now) */
+.prod-header,.prod-row{display:grid;grid-template-columns:1fr 80px 80px 70px 70px 80px;gap:10px;align-items:center;}
+.prod-header{padding-bottom:10px;border-bottom:2px solid var(--border);margin-bottom:4px;}
+.prod-row{padding:11px 0;border-bottom:1px solid var(--border);}
+.prod-row:last-child{border-bottom:none;}
+.col-h{font-size:10px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;}
+@media(max-width:560px){.prod-header,.prod-row{grid-template-columns:1fr;gap:8px;}.col-h{display:none;}.prod-row{padding:16px 0;}}
+.pname{font-size:14px;font-weight:700;color:var(--txt);line-height:1.4;}
+.pname .bdg{font-size:10px;padding:1px 6px;border-radius:8px;background:var(--warm);color:var(--accent);border:1px solid var(--accent-l);margin-right:4px;font-weight:400;}
+.cell-input{padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--font);color:var(--txt);background:white;outline:none;width:100%;transition:border-color .2s;text-align:center;}
+.cell-input:focus{border-color:var(--accent);}
+.cell-input:disabled{background:#f5f5f5;color:#aaa;}
+.toggle-wrap{display:flex;align-items:center;justify-content:center;}
+.toggle{position:relative;width:36px;height:20px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-track{position:absolute;inset:0;background:var(--border);border-radius:10px;cursor:pointer;transition:background .2s;}
+.toggle input:checked + .toggle-track{background:var(--green);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;background:white;border-radius:50%;transition:transform .2s;pointer-events:none;}
+.toggle input:checked ~ .toggle-thumb{transform:translateX(16px);}
+.prod-row.hidden-row{opacity:.4;}
+.prod-row.soldout-row .pname{text-decoration:line-through;color:#999;}
+.status-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;display:inline-block;text-align:center;}
+
+/* BREAD AVAILABILITY TABLE (live, server-backed — Feature 1) */
+.avail-header,.avail-row{display:grid;grid-template-columns:1fr 120px 100px 110px;gap:10px;align-items:center;}
+.avail-header{padding-bottom:10px;border-bottom:2px solid var(--border);margin-bottom:4px;}
+.avail-row{padding:11px 0;border-bottom:1px solid var(--border);}
+.avail-row:last-child{border-bottom:none;}
+@media(max-width:560px){.avail-header,.avail-row{grid-template-columns:1fr;gap:8px;}.avail-header{display:none;}.avail-row{padding:16px 0;}}
+.avail-row .pname{font-size:14px;font-weight:700;color:var(--txt);}
+
+/* FORM STATUS */
+.form-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);gap:16px;flex-wrap:wrap;}
+.form-row:last-child{border-bottom:none;padding-bottom:0;}
+.form-row:first-child{padding-top:0;}
+.form-info{flex:1;min-width:0;}
+.form-name{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px;}
+.form-url{font-size:11px;color:var(--txt2);font-family:monospace;}
+.form-controls{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.open-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;background:var(--green-bg);color:var(--green);}
+.closed-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;background:var(--red-bg);color:var(--red);}
+.loading-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;background:#f0f0f0;color:#999;}
+.close-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:white;cursor:pointer;font-size:12px;font-weight:700;font-family:var(--font);color:var(--txt);transition:all .2s;}
+.close-btn:hover{border-color:var(--red);color:var(--red);background:var(--red-bg);}
+.open-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:white;cursor:pointer;font-size:12px;font-weight:700;font-family:var(--font);color:var(--txt);transition:all .2s;}
+.open-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-bg);}
+.msg-panel{display:none;margin-top:12px;padding:14px;background:var(--warm);border-radius:10px;border:1px solid var(--border);}
+.msg-panel.show{display:block;}
+.msg-panel label{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;margin-top:10px;}
+.msg-panel label:first-child{margin-top:0;}
+.msg-panel textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:var(--font);resize:vertical;min-height:58px;outline:none;}
+.msg-panel textarea:focus{border-color:var(--accent);}
+.msg-panel .apply-btn{margin-top:10px;padding:8px 18px;background:var(--red);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;}
+.msg-panel .apply-btn:hover{background:#a93226;}
+.server-note{font-size:12px;color:var(--green);font-weight:700;margin-bottom:14px;padding:8px 12px;background:var(--green-bg);border-radius:8px;border:1px solid #A5D6A7;}
+
+
+/* ── v10 BAKE CALENDAR ── */
+.cal-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.cal-toolbar .server-note{margin:0;flex:1;}
+.refresh-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:white;cursor:pointer;font-size:12px;font-weight:700;font-family:var(--font);color:var(--txt);}
+.cal-updated{font-size:11px;color:var(--txt2);}
+.cal-loading,.cal-empty{text-align:center;padding:16px;color:var(--txt2);font-size:13px;}
+.cal-error{color:var(--red);padding:16px;}
+.cal-line{direction:rtl;text-align:right;}
+.cal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:12px;}
+.cal-date{font-size:19px;font-weight:900;color:var(--brown);}
+.cal-cutoff{font-size:13px;color:var(--txt);margin-top:3px;}
+.cal-next,.cal-skipnote{font-size:12px;color:var(--txt2);margin-top:4px;}
+.cal-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.skip-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:white;cursor:pointer;font-size:12px;font-weight:700;font-family:var(--font);color:var(--txt2);}
+.skip-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--warm);}
+.cal-hint{font-size:12px;color:var(--txt2);}
+.cal-table{border-top:1px solid var(--border);margin-top:6px;}
+.cal-row{display:grid;grid-template-columns:1fr 96px 86px 80px 34px;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);}
+.cal-hdr{padding:8px 0;}
+.cal-row .pname{font-size:14px;font-weight:700;}
+.cal-row.is-blocked .pname{color:#999;}
+.cal-row.is-sold .pname{text-decoration:line-through;color:#999;}
+.cal-num{font-size:13px;text-align:center;}
+.cal-num .sold{color:var(--red);font-weight:700;font-size:11px;}
+.icon-btn{border:none;background:none;color:var(--txt2);cursor:pointer;font-size:14px;padding:4px 8px;border-radius:6px;}
+.icon-btn:hover{background:var(--red-bg);color:var(--red);}
+.cal-add{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;}
+.cal-add select{padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;background:white;}
+.cal-add .cell-input{width:80px;}
+.cal-details{margin-top:14px;background:var(--warm);border:1px solid var(--accent-l);border-radius:10px;padding:10px 14px;}
+.cal-details summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--brown);}
+.cal-skips{margin-top:16px;padding-top:12px;border-top:1px dashed var(--border);}
+.cal-sub{font-size:12px;font-weight:900;color:var(--brown);margin-bottom:8px;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--warm);border:1px solid var(--accent-l);border-radius:14px;padding:4px 10px;font-size:12px;}
+.chip button{border:none;background:none;cursor:pointer;color:var(--txt2);font-size:12px;}
+@media(max-width:560px){.cal-row{grid-template-columns:1fr 70px 64px 52px 28px;gap:5px;}.cal-row .pname{font-size:13px;}}
+
+/* SAVE BAR */
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.save-status{font-size:13px;color:var(--txt2);}
+.save-status.saved{color:var(--green);font-weight:700;}
+.save-btn{padding:10px 28px;background:var(--accent);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background .2s;}
+.save-btn:hover{background:var(--accent-h);}
+
+/* LINKS */
+.links-row{display:flex;gap:8px;flex-wrap:wrap;}
+.preview-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--accent);text-decoration:none;font-weight:700;padding:7px 12px;border:1px solid var(--accent-l);border-radius:8px;background:var(--warm);transition:background .2s;}
+.preview-link:hover{background:var(--accent-l);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-icon">🔐</div>
+    <div class="login-title">Bakery Admin</div>
+    <p class="login-sub">Lechem Mikfari — Staff only</p>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') login()">
+    </div>
+    <div class="login-error" id="login-error"></div>
+    <button class="btn-primary" onclick="login()">Sign In</button>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div class="admin-app" id="admin-app">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">🍞</div>
+      <div>
+        <div class="header-title">Lechem Mikfari — Admin</div>
+        <div class="header-sub">Manage your bakery</div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </div>
+
+  <div class="main">
+
+    <!-- STATS -->
+    <div class="stats-grid" style="display:none">
+      <div class="stat-card"><span class="stat-value" id="stat-open">—</span><span class="stat-label">Forms Open</span></div>
+      <div class="stat-card"><span class="stat-value" id="stat-closed">—</span><span class="stat-label">Forms Closed</span></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('calendar')">📅 לוח אפייה</button>
+      <button class="tab" onclick="switchTab('forms')">🔒 טפסים אחרים</button>
+    </div>
+
+    <!-- TAB: CALENDAR (v10) -->
+    <div class="tab-panel active" id="tab-calendar">
+      <div class="cal-toolbar">
+        <div class="server-note">✓ כל קו פתוח ליום אפייה אחד, נסגר ונפתח לבד לפי השעון. כאן סוגרים מוקדם, מדלגים על ימים ומעדכנים כמויות — הכול חי, מול הגיליון.</div>
+        <div style="display:flex;align-items:center;gap:8px;"><span class="cal-updated" id="cal-updated"></span><button class="refresh-btn" onclick="loadCalendar()">↻ רענן</button></div>
+      </div>
+      <div id="calendar-lines"><div class="cal-loading">טוען...</div></div>
+      <div class="section" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <span style="font-size:13px;color:var(--txt2);">ברירת המחדל לכל יום אפייה מגיעה מגיליון <b>BakeTemplate</b>. שינוי שם/מחיר/תיאור של לחם האופה — בגיליון stock.</span>
+        <div class="links-row">
+          <a class="preview-link" href="order-he.html" target="_blank">↗ לחמים</a>
+          <a class="preview-link" href="order-fall-he.html" target="_blank">↗ סתיו</a>
+          <a class="preview-link" href="order-hala-he.html" target="_blank">↗ חלות</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: FORMS -->
+    <div class="tab-panel" id="tab-forms">
+      <div class="section">
+        <div class="section-title">🔒 Order Form Status</div>
+        <div class="server-note">✓ טפסי לחמים, סתיו וחלות נשלטים עכשיו מלוח האפייה. כאן — טפסים מיוחדים בלבד.</div>
+        <div id="form-rows-container">
+          <div style="text-align:center;padding:20px;color:var(--txt2);font-size:13px;">טוען סטטוסים מהשרת...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast">✓ Saved</div>
+
+<script>
+const ADMIN_PASSWORD = 'lechem2024';
+const SCRIPT_URL     = 'https://script.google.com/macros/s/AKfycbzzdF03GIEPXnSFvwKc5II8BhyXX4QUGljF9IRlkOvewwQh6X70_gsh7iogZbrBhB4vUg/exec';
+const STORAGE_KEY    = 'lm_admin_settings';
+
+const HALA_PRODUCTS = [
+  { id:'challah-spelt',        name:'Spelt Challah',             badge:'Spelt',        defaultPrice:12 },
+  { id:'challah-whole',        name:'Whole Wheat Challah',       badge:'Whole W. · Parve', defaultPrice:12 },
+  { id:'rolls-spelt',          name:'Spelt Rolls (5-pack)',       badge:'5-pack',       defaultPrice:10 },
+  { id:'rolls-whole',          name:'Whole Wheat Rolls (5-pack)', badge:'5-pack · Parve', defaultPrice:10 },
+  { id:'babka-choco',          name:'Chocolate Babka – Single',  badge:'Single',       defaultPrice:5  },
+  { id:'babka-choco-whole',    name:'Chocolate Babka – Whole',   badge:'Whole cake',   defaultPrice:15 },
+  { id:'babka-cinnamon',       name:'Cinnamon Babka – Single',   badge:'Single',       defaultPrice:5  },
+  { id:'babka-cinnamon-whole', name:'Cinnamon Babka – Whole',    badge:'Whole cake',   defaultPrice:15 },
+];
+
+const FORM_DEFS = [
+  { key:'pesach',   name:'🍷 טופס פסח – ללא גלוטן',   url:'order-pesach.html'  },
+  { key:'gf-he',    name:'🌾 טופס ללא גלוטן – עברית', url:'order-gf-he.html'   },
+];
+
+let settings = {};
+let formStatuses = {};   // loaded from server
+let activeTab = 'calendar';
+
+// ── AUTH ──
+function login() {
+  const val = document.getElementById('password-input').value;
+  if (val === ADMIN_PASSWORD) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-app').classList.add('show');
+    adminKey = val;
+    loadFormStatuses();
+    loadCalendar();
+  } else {
+    document.getElementById('login-error').textContent = 'Incorrect password.';
+    document.getElementById('password-input').value = '';
+    document.getElementById('password-input').focus();
+  }
+}
+
+function logout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-app').classList.remove('show');
+  document.getElementById('password-input').value = '';
+  document.getElementById('login-error').textContent = '';
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['calendar','forms'][i] === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ── SETTINGS (Hala tab only — decorative localStorage settings, unchanged for now) ──
+function loadSettings() {
+  try { settings = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { settings = {}; }
+
+  document.getElementById('hala-baking-date').value   = settings.halaBakingDate   || '';
+  document.getElementById('hala-delivery-date').value = settings.halaDeliveryDate || '';
+  document.getElementById('hala-delivery-time').value = settings.halaDeliveryTime || '';
+  document.getElementById('hala-order-cutoff').value  = settings.halaOrderCutoff  || '';
+
+  if (!settings.halaProducts) settings.halaProducts = {};
+
+  HALA_PRODUCTS.forEach(p => {
+    if (!settings.halaProducts[p.id])
+      settings.halaProducts[p.id] = { price: p.defaultPrice, stock: '', soldOut: false, visible: true };
+  });
+
+  updateHalaPreview(); setSaveStatus(true);
+}
+
+function saveAll() {
+  settings.halaBakingDate   = document.getElementById('hala-baking-date').value;
+  settings.halaDeliveryDate = document.getElementById('hala-delivery-date').value;
+  settings.halaDeliveryTime = document.getElementById('hala-delivery-time').value;
+  settings.halaOrderCutoff  = document.getElementById('hala-order-cutoff').value;
+
+  HALA_PRODUCTS.forEach(p => {
+    settings.halaProducts[p.id] = {
+      price:   parseFloat(document.getElementById('hprice-' + p.id)?.value) || p.defaultPrice,
+      stock:   document.getElementById('hstock-' + p.id)?.value || '',
+      soldOut: document.getElementById('hsoldout-' + p.id)?.checked || false,
+      visible: document.getElementById('hvisible-' + p.id)?.checked !== false,
+    };
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  setSaveStatus(true);
+  showToast('✓ Saved! Order forms updated.');
+}
+
+function setSaveStatus(saved) {
+  const el = document.getElementById('save-status');
+  el.textContent = saved ? 'All changes saved ✓' : 'Unsaved changes';
+  el.className = 'save-status' + (saved ? ' saved' : '');
+}
+function markUnsaved() { setSaveStatus(false); }
+
+// ── PREVIEW (Hala) ──
+function updateHalaPreview() {
+  const baking   = document.getElementById('hala-baking-date').value;
+  const delivery = document.getElementById('hala-delivery-date').value;
+  const time     = document.getElementById('hala-delivery-time').value;
+  const cutoff   = document.getElementById('hala-order-cutoff').value;
+  let p = '🕯️ ';
+  if (baking)   p += `נאפה: ${fmt(baking)}. `;
+  if (delivery) p += `איסוף/משלוח: ${fmt(delivery)}${time ? ' · ' + time : ''}. `;
+  if (cutoff)   p += `הזמנות עד: ${cutoff}.`;
+  if (!baking && !delivery) p = '🕯️ Preview will appear here after you fill in the dates';
+  document.getElementById('hala-fresh-preview').textContent = p;
+  markUnsaved();
+}
+function fmt(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+}
+
+// ── RENDER PRODUCTS (Hala tab — decorative, unchanged for now) ──
+function renderProductRows(container, products, settingsKey, prefix) {
+  container.innerHTML = products.map(p => {
+    const s = settings[settingsKey]?.[p.id] || { price: p.defaultPrice, stock: '', soldOut: false, visible: true };
+    const rowClass = !s.visible ? 'hidden-row' : s.soldOut ? 'soldout-row' : '';
+    const statusBg  = !s.visible ? '#f0f0f0' : s.soldOut ? '#fdecea' : '#e8f5e9';
+    const statusCol = !s.visible ? '#999'     : s.soldOut ? '#c0392b' : '#2e7d32';
+    const statusTxt = !s.visible ? 'Hidden'   : s.soldOut ? 'Sold Out' : 'Active';
+    const dis       = !s.visible || s.soldOut;
+    return `
+    <div class="prod-row ${rowClass}" id="${prefix}row-${p.id}">
+      <div class="pname"><span class="bdg">${p.badge}</span>${p.name}</div>
+      <div><input class="cell-input" type="number" id="${prefix}price-${p.id}" value="${s.price}" min="1" max="999" step="0.5"
+        onchange="markUnsaved();updateRowStyle('${p.id}','${prefix}')" ${dis?'disabled':''}></div>
+      <div><input class="cell-input" type="number" id="${prefix}stock-${p.id}" value="${s.stock}" min="0" max="999" placeholder="∞"
+        onchange="markUnsaved()" ${dis?'disabled':''}></div>
+      <div class="toggle-wrap"><label class="toggle">
+        <input type="checkbox" id="${prefix}soldout-${p.id}" ${s.soldOut?'checked':''}
+          onchange="markUnsaved();updateRowStyle('${p.id}','${prefix}')">
+        <div class="toggle-track"></div><div class="toggle-thumb"></div>
+      </label></div>
+      <div class="toggle-wrap"><label class="toggle">
+        <input type="checkbox" id="${prefix}visible-${p.id}" ${s.visible?'checked':''}
+          onchange="markUnsaved();updateRowStyle('${p.id}','${prefix}')">
+        <div class="toggle-track"></div><div class="toggle-thumb"></div>
+      </label></div>
+      <div style="text-align:center">
+        <span id="${prefix}status-${p.id}" class="status-badge"
+          style="background:${statusBg};color:${statusCol}">${statusTxt}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderHalaProducts() {
+  renderProductRows(document.getElementById('hala-product-rows'), HALA_PRODUCTS, 'halaProducts', 'h');
+}
+
+function updateRowStyle(id, prefix) {
+  const visible = document.getElementById(prefix + 'visible-' + id)?.checked;
+  const soldOut = document.getElementById(prefix + 'soldout-' + id)?.checked;
+  const row     = document.getElementById(prefix + 'row-' + id);
+  const status  = document.getElementById(prefix + 'status-' + id);
+  const priceI  = document.getElementById(prefix + 'price-' + id);
+  const stockI  = document.getElementById(prefix + 'stock-' + id);
+  if (!row) return;
+  row.className = 'prod-row' + (!visible ? ' hidden-row' : soldOut ? ' soldout-row' : '');
+  const dis = !visible || soldOut;
+  priceI.disabled = dis; stockI.disabled = dis;
+  if (!visible)      { status.textContent='Hidden';   status.style.background='#f0f0f0'; status.style.color='#999'; }
+  else if (soldOut)  { status.textContent='Sold Out'; status.style.background='#fdecea'; status.style.color='#c0392b'; }
+  else               { status.textContent='Active';   status.style.background='#e8f5e9'; status.style.color='#2e7d32'; }
+}
+
+// ── BREAD AVAILABILITY — LIVE, SERVER-BACKED (Feature 1) ──
+async function loadBreadAvailability(sheet = 'stock', containerId = 'bread-availability-rows') {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt2);font-size:13px;">טוען מהשרת...</div>';
+  try {
+    const res  = await fetch(SCRIPT_URL + '?action=adminStock&sheet=' + sheet);
+    const data = await res.json();
+    if (data.success) {
+      renderBreadAvailability(data.rows || [], sheet, containerId);
+    } else {
+      container.innerHTML = '<div style="color:var(--red);padding:16px;">שגיאה בטעינת נתוני מלאי: ' + (data.error||'') + '</div>';
+    }
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--red);padding:16px;">שגיאת רשת בטעינת מלאי. בדוק חיבור ונסה לרענן.</div>';
+  }
+}
+
+function renderBreadAvailability(rows, sheet = 'stock', containerId = 'bread-availability-rows') {
+  const container = document.getElementById(containerId);
+  if (!rows.length) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt2);font-size:13px;">אין ימי אפייה עתידיים בגיליון המלאי (' + sheet + ').</div>';
+    return;
+  }
+  const sorted = rows.slice().sort((a,b) => a.date === b.date ? a.nameHe.localeCompare(b.nameHe) : a.date.localeCompare(b.date));
+  container.innerHTML = sorted.map(r => {
+    const rowId       = (sheet + '__' + r.product_id + '__' + r.date).replace(/[^a-zA-Z0-9_-]/g, '_');
+    const isAvailable = !r.blocked;
+    return `
+    <div class="avail-row" id="arow-${rowId}">
+      <div class="pname">${r.nameHe}</div>
+      <div style="text-align:center;font-size:13px;color:var(--txt2);">${fmtShort(r.date)}</div>
+      <div style="text-align:center;font-size:13px;">${r.remaining} / ${r.max}</div>
+      <div class="toggle-wrap"><label class="toggle">
+        <input type="checkbox" id="atoggle-${rowId}" ${isAvailable?'checked':''}
+          onchange="toggleBreadBlock('${r.product_id}','${r.date}', this.checked, '${rowId}', '${sheet}')">
+        <div class="toggle-track"></div><div class="toggle-thumb"></div>
+      </label></div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleBreadBlock(productId, date, isAvailable, rowId, sheet = 'stock') {
+  const toggle = document.getElementById('atoggle-' + rowId);
+  try {
+    const params = new URLSearchParams({ action:'setBlocked', sheet, product_id: productId, date, blocked: String(!isAvailable) });
+    const res  = await fetch(SCRIPT_URL + '?' + params.toString());
+    const data = await res.json();
+    if (data.success) {
+      showToast(isAvailable ? '✓ המוצר זמין להזמנה' : '🔒 המוצר חסום להזמנה (נשאר גלוי ללקוחות)');
+    } else {
+      showToast('שגיאה: ' + (data.error||'unknown'), true);
+      if (toggle) toggle.checked = !isAvailable; // revert on failure
+    }
+  } catch(e) {
+    showToast('שגיאת רשת — בדוק חיבור', true);
+    if (toggle) toggle.checked = !isAvailable; // revert on failure
+  }
+}
+
+function fmtShort(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('he-IL', { weekday:'short', day:'numeric', month:'numeric' });
+}
+
+// ── STATS ──
+function updateStats() {
+  const open   = Object.values(formStatuses).filter(s => !s.closed).length;
+  const closed = Object.values(formStatuses).filter(s => s.closed).length;
+  if (!document.getElementById('stat-open')) return;
+  document.getElementById('stat-open').textContent   = open   + '/' + FORM_DEFS.length;
+  document.getElementById('stat-closed').textContent = closed + '/' + FORM_DEFS.length;
+}
+
+// ── FORM STATUS — SERVER SIDE ──
+async function loadFormStatuses() {
+  const container = document.getElementById('form-rows-container');
+  container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt2);font-size:13px;">טוען מהשרת...</div>';
+
+  try {
+    const results = await Promise.all(
+      FORM_DEFS.map(f =>
+        fetch(SCRIPT_URL + '?action=status&form=' + f.key)
+          .then(r => r.json())
+          .then(data => ({ key: f.key, ...data }))
+          .catch(() => ({ key: f.key, closed: false, msgHe: '', msgEn: '' }))
+      )
+    );
+    results.forEach(r => { formStatuses[r.key] = r; });
+    renderFormRows();
+    updateStats();
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--red);padding:16px;">שגיאה בטעינת סטטוסים. בדוק את ה-Script URL.</div>';
+  }
+}
+
+function renderFormRows() {
+  const container = document.getElementById('form-rows-container');
+  container.innerHTML = FORM_DEFS.map(f => {
+    const s = formStatuses[f.key] || { closed: false };
+    const badgeHtml  = s.closed
+      ? `<span class="closed-badge">סגור ✗</span>`
+      : `<span class="open-badge">פתוח ✓</span>`;
+    const btnHtml = s.closed
+      ? `<button class="open-btn" onclick="toggleForm('${f.key}')">פתח טופס</button>`
+      : `<button class="close-btn" onclick="toggleForm('${f.key}')">סגור טופס</button>`;
+    return `
+    <div class="form-row" id="frow-${f.key}">
+      <div class="form-info">
+        <div class="form-name">${f.name}</div>
+        <div class="form-url">${f.url}</div>
+      </div>
+      <div class="form-controls" id="fctrl-${f.key}">
+        ${badgeHtml} ${btnHtml}
+      </div>
+    </div>
+    <div class="msg-panel" id="fmsg-${f.key}">
+      <label>הודעה בעברית ללקוח</label>
+      <textarea id="ftxt-he-${f.key}" placeholder="ההזמנות לשבוע זה סגורות. נפתח שוב בקרוב 🍞">${s.msgHe||''}</textarea>
+      <label>Message in English</label>
+      <textarea id="ftxt-en-${f.key}" placeholder="Orders are closed. We'll reopen soon 🍞">${s.msgEn||''}</textarea>
+      <button class="apply-btn" onclick="applyClose('${f.key}')">אשר סגירה</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleForm(key) {
+  const s = formStatuses[key] || { closed: false };
+  if (s.closed) {
+    // פתח מחדש — מיד
+    serverSetStatus(key, false, '', '');
+  } else {
+    // הצג שדות הודעה
+    const panel = document.getElementById('fmsg-' + key);
+    panel.classList.toggle('show');
+  }
+}
+
+function applyClose(key) {
+  const msgHe = document.getElementById('ftxt-he-' + key)?.value.trim() || '';
+  const msgEn = document.getElementById('ftxt-en-' + key)?.value.trim() || '';
+  serverSetStatus(key, true, msgHe, msgEn);
+}
+
+async function serverSetStatus(key, closed, msgHe, msgEn) {
+  // Optimistic UI
+  formStatuses[key] = { closed, msgHe, msgEn };
+  renderFormRows();
+  updateStats();
+
+  const ctrl = document.getElementById('fctrl-' + key);
+  if (ctrl) ctrl.innerHTML = `<span class="loading-badge">שומר...</span>`;
+
+  try {
+    const params = new URLSearchParams({ action:'setStatus', form: key, closed: String(closed), msgHe, msgEn });
+    const res  = await fetch(SCRIPT_URL + '?' + params.toString());
+    const data = await res.json();
+    if (data.success) {
+      showToast(closed ? '🔒 הטופס נסגר לכולם!' : '✓ הטופס נפתח מחדש!');
+    } else {
+      showToast('שגיאה: ' + (data.error||'unknown'), true);
+    }
+  } catch(e) {
+    showToast('שגיאת רשת — בדוק חיבור', true);
+  }
+  renderFormRows();
+  updateStats();
+}
+
+// ── TOAST ──
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+
+// ════════════════════════════════════════════════════════════
+// v10 — לוח ימי אפייה (Bake Calendar)
+// ════════════════════════════════════════════════════════════
+const LINE_ICONS  = { sourdough: '🍞', fall: '🍂', challah: '🕯️' };
+const LINE_SHEETS = { sourdough: 'stock', fall: 'FallStock', challah: 'HalaStock' };
+let adminKey = '';
+let calData = null;
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+async function api(params) {
+  const q = new URLSearchParams(Object.assign({ key: adminKey }, params));
+  const res = await fetch(SCRIPT_URL + '?' + q.toString());
+  return res.json();
+}
+
+async function loadCalendar() {
+  const box = document.getElementById('calendar-lines');
+  if (!calData) box.innerHTML = '<div class="cal-loading">טוען את לוח האפייה מהשרת...</div>';
+  try {
+    const data = await api({ action: 'adminCalendar' });
+    if (!data.success) { box.innerHTML = `<div class="cal-error">שגיאה: ${esc(data.error)}</div>`; return; }
+    calData = data;
+    renderCalendar();
+  } catch (e) {
+    box.innerHTML = '<div class="cal-error">שגיאת רשת בטעינת לוח האפייה. בדוק חיבור ונסה לרענן.</div>';
+  }
+}
+
+function renderCalendar() {
+  const box = document.getElementById('calendar-lines');
+  const order = ['sourdough', 'fall', 'challah'];
+  box.innerHTML = order.filter(k => calData.lines[k]).map(k => renderLine(calData.lines[k])).join('');
+  document.getElementById('cal-updated').textContent = 'עודכן: ' + new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+}
+
+function renderLine(L) {
+  const st = L.state;
+  if (!st.date) return `<div class="section"><div class="section-title">${LINE_ICONS[L.key]} ${esc(L.nameHe)}</div><p>אין ימי אפייה פתוחים.</p></div>`;
+  const badge = st.open
+    ? `<span class="open-badge">פתוח להזמנות ✓</span>`
+    : `<span class="closed-badge">נסגר מוקדם ✗</span>`;
+  const closeBtn = st.open
+    ? `<button class="close-btn" onclick="toggleClosePanel('${L.key}')">סגור מוקדם</button>`
+    : `<button class="open-btn" onclick="setDayClosed('${L.key}','${st.date}',false)">פתח מחדש</button>`;
+  const nextInfo = st.next
+    ? `<div class="cal-next">הבא בתור: <b>${esc(st.next.dateHe)}</b> · ייפתח אוטומטית ${esc(st.next.opensHe)}</div>` : '';
+  const skipped = (st.skipped || []).length
+    ? `<div class="cal-skipnote">⏭️ מדלג על: ${st.skipped.map(s => esc(s.date.slice(5).split('-').reverse().join('/'))).join(', ')}</div>` : '';
+  return `
+  <div class="section cal-line" id="line-${L.key}">
+    <div class="section-title">${LINE_ICONS[L.key]} ${esc(L.nameHe)}</div>
+    <div class="cal-head">
+      <div>
+        <div class="cal-date">${esc(st.dateHe)}</div>
+        <div class="cal-cutoff">ההזמנות נסגרות: <b>${esc(st.cutoffHe)}</b></div>
+        ${nextInfo}${skipped}
+      </div>
+      <div class="cal-actions">${badge} ${closeBtn}
+        <button class="skip-btn" onclick="skipDay('${L.key}','${st.date}','${esc(st.dateHe)}')">דלג על היום הזה</button>
+      </div>
+    </div>
+    <div class="msg-panel" id="close-${L.key}">
+      <label>הודעה ללקוחות בעברית (לא חובה)</label>
+      <textarea id="close-he-${L.key}" placeholder="אזל — תודה לכולם!"></textarea>
+      <label>Message in English (optional)</label>
+      <textarea id="close-en-${L.key}" placeholder="Sold out — thank you all!"></textarea>
+      <p class="cal-hint">ללקוחות יוצג גם מתי ייפתח יום האפייה הבא.</p>
+      <button class="apply-btn" onclick="setDayClosed('${L.key}','${st.date}',true)">אשר סגירה</button>
+    </div>
+    ${renderDay(L.key, L.current, 'cur')}
+    ${L.next ? `<details class="cal-details"><summary>📅 יום האפייה הבא — ${esc(L.next.dateHe)} (אפשר להכין מראש)</summary>${renderDay(L.key, L.next, 'nxt')}
+      <div class="cal-actions" style="margin-top:10px;"><button class="skip-btn" onclick="skipDay('${L.key}','${L.next.date}','${esc(L.next.dateHe)}')">דלג על ${esc(L.next.dateHe)}</button></div></details>` : ''}
+    ${renderSkips(L)}
+  </div>`;
+}
+
+function renderDay(lineKey, day, tag) {
+  if (!day) return '';
+  const rows = day.rows.map(r => {
+    const rid = `${tag}-${lineKey}-${r.product_id}`;
+    return `<div class="cal-row ${r.blocked ? 'is-blocked' : ''} ${r.remaining <= 0 ? 'is-sold' : ''}">
+      <div class="pname">${esc(r.nameHe)}</div>
+      <div class="cal-num">${r.ordered} / ${r.max}${r.remaining <= 0 ? ' <span class="sold">אזל</span>' : ''}</div>
+      <div><input class="cell-input" type="number" min="${r.ordered}" value="${r.max}" id="qty-${rid}"
+          onchange="setQty('${lineKey}','${day.date}','${r.product_id}', this.value, ${r.max}, this)"></div>
+      <div class="toggle-wrap"><label class="toggle" title="ניתן להזמנה">
+        <input type="checkbox" ${r.blocked ? '' : 'checked'} onchange="setBlocked('${lineKey}','${day.date}','${r.product_id}', !this.checked, this)">
+        <div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+      <div>${r.ordered > 0 ? '' : `<button class="icon-btn" title="הורד מהתפריט" onclick="removeProduct('${lineKey}','${day.date}','${r.product_id}')">✕</button>`}</div>
+    </div>`;
+  }).join('') || '<div class="cal-empty">אין מוצרים בתפריט של היום הזה.</div>';
+  const add = day.notOnMenu.length ? `
+    <div class="cal-add">
+      <select id="add-${tag}-${lineKey}">${day.notOnMenu.map(p => `<option value="${esc(p.product_id)}">${esc(p.nameHe)}</option>`).join('')}</select>
+      <input class="cell-input" type="number" min="1" value="6" id="addq-${tag}-${lineKey}">
+      <button class="open-btn" onclick="addProduct('${lineKey}','${day.date}','${tag}')">+ הוסף לתפריט</button>
+    </div>` : '';
+  return `<div class="cal-table">
+    <div class="cal-row cal-hdr"><div class="col-h">מוצר</div><div class="col-h">הוזמן / מקס׳</div><div class="col-h">כמות מקס׳</div><div class="col-h">ניתן להזמנה</div><div></div></div>
+    ${rows}</div>${add}`;
+}
+
+function renderSkips(L) {
+  const list = L.skips.length
+    ? L.skips.map(s => `<span class="chip">${esc(s.dateHe)}${s.reason ? ' · ' + esc(s.reason) : ''}
+        <button onclick="unskip('${L.key}','${s.date}')" title="בטל דילוג">✕</button></span>`).join('')
+    : '<span class="cal-hint">אין ימי דילוג מתוכננים.</span>';
+  return `<div class="cal-skips">
+    <div class="cal-sub">⏭️ ימים שלא אופים בהם</div>
+    <div class="chips">${list}</div>
+    <div class="cal-add">
+      <input type="date" id="skip-date-${L.key}" class="cell-input" style="width:auto;">
+      <input type="text" id="skip-reason-${L.key}" class="cell-input" placeholder="סיבה (לא חובה)" style="width:auto;text-align:right;">
+      <button class="skip-btn" onclick="addSkip('${L.key}')">הוסף דילוג</button>
+    </div>
+  </div>`;
+}
+
+function toggleClosePanel(k) { document.getElementById('close-' + k).classList.toggle('show'); }
+
+async function run(params, okMsg) {
+  try {
+    const r = await api(params);
+    if (r.success) { if (okMsg) showToast(okMsg); await loadCalendar(); return r; }
+    const msgs = {
+      below_ordered: `לא ניתן — כבר הוזמנו ${r.ordered}`,
+      has_orders: 'לא ניתן להוריד — יש כבר הזמנות על המוצר',
+      not_a_bake_day: 'התאריך שנבחר הוא לא יום אפייה של הקו הזה',
+      unauthorized: 'סיסמה שגויה — התחבר מחדש',
+    };
+    showToast('שגיאה: ' + (msgs[r.error] || r.error), true);
+    await loadCalendar();
+  } catch (e) { showToast('שגיאת רשת — בדוק חיבור', true); }
+}
+
+function setDayClosed(line, date, closed) {
+  const msgHe = closed ? (document.getElementById('close-he-' + line)?.value.trim() || '') : '';
+  const msgEn = closed ? (document.getElementById('close-en-' + line)?.value.trim() || '') : '';
+  run({ action: 'setDayClosed', line, date, closed: String(closed), msgHe, msgEn }, closed ? '🔒 יום האפייה נסגר להזמנות' : '✓ יום האפייה נפתח מחדש');
+}
+function skipDay(line, date, label) {
+  if (!confirm(`לדלג על ${label}? הטופס יעבור ליום האפייה הבא.`)) return;
+  run({ action: 'setSkip', line, date, skip: 'true' }, '⏭️ היום סומן כדילוג');
+}
+function addSkip(line) {
+  const date = document.getElementById('skip-date-' + line).value;
+  const reason = document.getElementById('skip-reason-' + line).value.trim();
+  if (!date) { showToast('בחר תאריך', true); return; }
+  run({ action: 'setSkip', line, date, skip: 'true', reason }, '⏭️ נוסף יום דילוג');
+}
+function unskip(line, date) { run({ action: 'setSkip', line, date, skip: 'false' }, '✓ הדילוג בוטל'); }
+function setQty(line, date, product_id, val, oldVal, input) {
+  const max = parseInt(val, 10);
+  if (!(max >= 0)) { input.value = oldVal; return; }
+  run({ action: 'setQty', line, date, product_id, max: String(max) }, '✓ הכמות עודכנה');
+}
+function addProduct(line, date, tag) {
+  const product_id = document.getElementById(`add-${tag}-${line}`).value;
+  const max = document.getElementById(`addq-${tag}-${line}`).value;
+  run({ action: 'setQty', line, date, product_id, max }, '✓ המוצר נוסף לתפריט');
+}
+function removeProduct(line, date, product_id) {
+  run({ action: 'removeProduct', line, date, product_id }, '✓ המוצר הורד מהתפריט');
+}
+function setBlocked(line, date, product_id, blocked) {
+  run({ action: 'setBlocked', sheet: LINE_SHEETS[line], product_id, date, blocked: String(blocked) },
+    blocked ? '🔒 המוצר חסום להזמנה (נשאר גלוי ללקוחות)' : '✓ המוצר זמין להזמנה');
+}
+</script>
+</body>
+</html>
