@@ -128,6 +128,8 @@ body{background:var(--cream);font-family:'Frank Ruhl Libre', serif;color:var(--t
   <p class="tagline">קמח, מים, מחמצת טבעית, ומלח – הכול בעבודת יד עם אהבה 🌾</p>
   <div class="fresh-badge" id="fresh-badge">נאפה טרי ומסופק באותו היום 🌟</div>
   <br>
+  <a class="lang-link home-link" href="../he/">→ דף הבית</a>
+  <span style="opacity:.5;margin:0 6px;">·</span>
   <a class="lang-link" href="order-en.html">English →</a>
 </header>
 
@@ -153,7 +155,7 @@ body{background:var(--cream);font-family:'Frank Ruhl Libre', serif;color:var(--t
     <div class="stitle">💳 לתשלום</div>
     <p style="font-size:13px;color:var(--txt2);margin-bottom:4px;">אנא שלם לאחר אישור ההזמנה מאיתנו:</p>
     <div class="pay-grid">
-      <a class="pay-btn" href="https://venmo.com/code?user_id=4416788448151226881&created=1774894628" target="_blank">
+      <a class="pay-btn" href="https://venmo.com/code?user_id=4416788448151226881&created=1791152174" target="_blank">
         <span class="pay-icon">💜</span> Venmo
       </a>
       <button class="pay-btn" onclick="showZelle()">
@@ -163,6 +165,7 @@ body{background:var(--cream);font-family:'Frank Ruhl Libre', serif;color:var(--t
     <p class="pay-note">* שלם רק לאחר קבלת אישור מאיתנו</p>
   </div>
   <button class="neworder-btn" onclick="resetForm()">הגש הזמנה חדשה</button>
+  <a class="neworder-btn" href="../he/" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box;">חזרה לדף הבית</a>
 </div>
 
 <!-- FORM -->
@@ -241,7 +244,7 @@ body{background:var(--cream);font-family:'Frank Ruhl Libre', serif;color:var(--t
 const PRODUCTS = [{"id": "spelt", "he": "לחם כוסמין מלא מחמצת", "en": "Whole Spelt Sourdough", "badge_he": "פרווה", "badge_en": "Parve", "price": 12, "cal": 89, "carbs": 16, "protein": 3.5, "fat": 1.2, "ing_he": "קמח לחם, קמח כוסמין מלא, מים, מחמצת טבעית, מלח", "ing_en": "Bread flour, whole spelt flour, water, natural sourdough starter, salt", "pitch_he": "75% קמח כוסמין מלא עם מחמצת טבעית – עשיר בסיבים, מינרלים וחלבון. הכוסמין קל לעיכול והמחמצת מורידה את האינדקס הגליקמי.", "pitch_en": "75% whole spelt with natural sourdough — rich in fiber, minerals and protein. Spelt is easier to digest and the sourdough lowers the glycemic index."}, {"id": "nuts", "he": "לחם אגוזים", "en": "Walnut Sourdough", "badge_he": "פרווה", "badge_en": "Parve", "price": 10, "cal": 104, "carbs": 15, "protein": 3.8, "fat": 4.2, "ing_he": "קמח מלא, קמח לחם, מים, מחמצת טבעית, אגוזי מלך, מלח", "ing_en": "Whole wheat flour, bread flour, water, natural sourdough starter, walnuts, salt", "pitch_he": "מחמצת קמח מלא עם אגוזי מלך – מקור מצוין לאומגה 3, נוגדי חמצון וסיבים. אגוזי המלך מוסיפים שומן בריא ושובע ממושך.", "pitch_en": "Whole wheat sourdough with walnuts — excellent source of omega-3, antioxidants and fiber. Walnuts add healthy fat and lasting satiety."}, {"id": "olives", "he": "לחם זיתים", "en": "Olive Sourdough", "badge_he": "פרווה", "badge_en": "Parve", "price": 10, "cal": 85, "carbs": 15, "protein": 3.2, "fat": 1.8, "ing_he": "קמח מלא, קמח לחם, מים, מחמצת טבעית, זיתים, מלח", "ing_en": "Whole wheat flour, bread flour, water, natural sourdough starter, olives, salt", "pitch_he": "מחמצת קמח מלא עם זיתים – שומן חד-בלתי-רווי לבריאות הלב. הקל ביותר בסדרה, עשיר בטעם ים תיכוני.", "pitch_en": "Whole wheat sourdough with olives — heart-healthy monounsaturated fats. The lightest loaf in the range, full of Mediterranean flavor."}, {"id": "shiur", "he": "לחם שיאור", "en": "Pure Sourdough (Shiur)", "badge_he": "פרווה", "badge_en": "Parve", "price": 10, "cal": 89, "carbs": 17, "protein": 3.4, "fat": 0.8, "ing_he": "קמח לחם, קמח מלא, מים, מחמצת טבעית, מלח", "ing_en": "Bread flour, whole wheat flour, water, natural sourdough starter, salt", "pitch_he": "ארבעה מרכיבים בלבד. המחמצת מפרקת פיטאטים, משפרת ספיגת מינרלים ומורידה את האינדקס הגליקמי. נקי, פשוט ומזין.", "pitch_en": "Four ingredients only. The sourdough breaks down phytates, improves mineral absorption and lowers the glycemic index. Clean and nourishing."}, {"id": "kasten", "he": "לחם קסטן בריאות", "en": "Kasten Health Loaf", "badge_he": "פרווה ⭐", "badge_en": "Parve ⭐", "price": 12, "cal": 94, "carbs": 17, "protein": 3.5, "fat": 1.5, "ing_he": "קמח לחם, מים, קמח מלא, פתיתי שיבולת שועל, מלח, סוכר, שמן, שמרים", "ing_en": "Bread flour, water, whole wheat flour, rolled oats, salt, sugar, oil, yeast", "pitch_he": "קמח לחם, קמח מלא ושיבולת שועל – הבטא-גלוקן שבשיבולת שועל מאזן סוכר וכולסטרול. נאפה בתבנית סגורה לפרוסות אחידות לסנדוויץ׳.", "pitch_en": "Bread flour, whole wheat and oats — oat beta-glucan helps balance blood sugar and cholesterol. Baked in closed tin for perfect sandwich slices."}, {"id": "bagel-white", "he": "בייגל ירושלמי לבן (3 במנה)", "en": "Jerusalem Bagels – White (3 pack)", "badge_he": "פרווה", "badge_en": "Parve", "price": 10, "cal": 283, "carbs": 38, "protein": 7.2, "fat": 5.8, "ing_he": "קמח לחם, מים, שמן זית, סוכר, מלח, שמרים יבשים, שומשום לבן", "ing_en": "Bread flour, water, olive oil, sugar, salt, dry yeast, white sesame", "pitch_he": "ישר מרחובות ירושלים. פריך מבחוץ, רך מבפנים. ציפוי שומשום עשיר בסידן, ברזל וויטמין E.", "pitch_en": "Straight from Jerusalem. Crispy outside, soft inside. Sesame coating rich in calcium, iron and vitamin E.", "cal_label_he": "קל׳ למקל", "cal_label_en": "cal/bagel"}, {"id": "rolls-school", "he": "לחמניות בית ספר (5 במנה)", "en": "School Rolls (5-pack)", "badge_he": "פרווה", "badge_en": "Parve", "price": 10, "cal": 230, "carbs": 42, "protein": 7, "fat": 4, "ing_he": "קמח לבן אורגני, קמח סמולינה אורגני, מים, שמרים יבשים, מלח, שמן", "ing_en": "Organic white flour, organic semolina flour, water, dry yeast, salt, oil", "pitch_he": "לחמניות רכות ועדינות שנאפו במיוחד לתיק האוכל של בית הספר, מקמחים אורגניים איכותיים. תערובת קמח לבן וסמולינה מעניקה מרקם רך עם נגיעת מתיקות טבעית — בלי חלב או ביצים, פרווה ומושלמות לכל ארוחה.", "pitch_en": "Soft, gentle rolls made with quality organic flours, perfect for the school lunchbox. A blend of white and semolina flour gives a tender crumb with a natural touch of sweetness — dairy-free and pareve, perfect for any meal.", "cal_label_he": "קל׳ ללחמנייה", "cal_label_en": "cal/roll"}, {"id": "health", "he": "לחם בריאות", "en": "Health Loaf", "badge_he": "גלוטן נמוך", "badge_en": "Low Gluten", "price": 12, "cal": 96, "carbs": 15, "protein": 3.8, "fat": 2.1, "ing_he": "קמח כוסמין מלא, קמח לחם, מים, מחמצת טבעית, פתיתי שיבולת שועל, זרעי פשתן, מלח", "ing_en": "Whole spelt flour, bread flour, water, natural sourdough starter, rolled oats, flaxseed, salt", "pitch_he": "כוסמין מלא, שיבולת שועל וזרעי פשתן – שלושה מקורות סיבים בלחם אחד. פשתן עשיר באומגה 3 ולינגנים. מכיל מעט גלוטן בלבד.", "pitch_en": "Whole spelt, oats and flaxseed — three fiber sources in one loaf. Flaxseed rich in omega-3 and lignans. Low gluten only."}];
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzdF03GIEPXnSFvwKc5II8BhyXX4QUGljF9IRlkOvewwQh6X70_gsh7iogZbrBhB4vUg/exec';
-const VENMO_URL = 'https://venmo.com/code?user_id=4416788448151226881&created=1774894628';
+const VENMO_URL = 'https://venmo.com/code?user_id=4416788448151226881&created=1791152174';
 const FORM_KEY = 'lm_form_status_he';
 const IS_HE = true;
 const BAKE_LINE = 'sourdough';
@@ -473,6 +476,7 @@ async function loadStock() {
     syncQtyDisplays();
     updateSummary();
     updateSubmit();
+    applyItemParam();
   } catch(e) {
     console.warn('Bake day load failed:', e);
     renderProducts();
@@ -662,7 +666,7 @@ async function submitOrder() {
     if (data.success === true) {
       // הזמנה התקבלה בהצלחה — מסך תודה
       showThankYou(name, sel, total, email);
-      bakeThankYouNote(data);
+      finishThankYou(data, total, email);
     } else if (handleBakeError(data)) {
       btn.disabled = false;
       btn.textContent = IS_HE ? 'שלח הזמנה' : 'Place Order';
@@ -832,10 +836,91 @@ function handleBakeError(data) {
   }
   return false;
 }
-function bakeThankYouNote(data) {
-  const el = document.getElementById('ty-sub');
-  if (!el || !data || !data.bakeDate) return;
-  el.textContent += ' ' + bakeTxt(`📅 יום האפייה: ${data.bakeDateHe}.`, `📅 Bake day: ${data.bakeDateEn}.`);
+// ── v12.2: הגעה מהקטלוג (?item=id) — המוצר נבחר (כמות 1), גוללים אליו ומדגישים ──
+let __itemApplied = false;
+function applyItemParam() {
+  if (__itemApplied) return;
+  __itemApplied = true;
+  const id = new URLSearchParams(location.search).get('item');
+  if (!id) return;
+  const p = PRODUCTS.find(x => x.id === id);
+  const el = document.getElementById('q-' + id) || document.getElementById('qn-' + id);
+  const pname = p ? (IS_HE ? (p.he || '') : (p.en || p.he || '')).split('(')[0].trim() : '';
+  if (!p || p.hidden || p.soldOut || !el) {
+    const list = document.getElementById('products-list') || document.getElementById('breads-list');
+    if (list && pname) {
+      const n = document.createElement('p');
+      n.style.cssText = 'background:#FDF5E8;border:1px solid #E8C99A;border-radius:9px;padding:10px 12px;font-size:13px;margin-bottom:12px;';
+      n.textContent = bakeTxt(`"${pname}" לא זמין ביום האפייה הזה — אפשר לבחור מהמוצרים האחרים.`, `"${pname}" isn't available for this bake day — please choose from the other items.`);
+      list.parentElement.insertBefore(n, list);
+    }
+    return;
+  }
+  if (!qtys[id]) qtys[id] = 1;
+  syncQtyDisplays();
+  if (typeof refresh === 'function') refresh();
+  else { updateSummary(); if (typeof updateSubmit === 'function') updateSubmit(); }
+  const card = el.closest('.pacc') || el.parentElement;
+  card.style.transition = 'box-shadow .4s, background .4s';
+  card.style.boxShadow = '0 0 0 3px #C9763C'; card.style.borderRadius = '12px'; card.style.background = '#FFF8EE';
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+  setTimeout(() => { card.style.boxShadow = ''; card.style.background = ''; }, 4000);
+}
+
+// ── v12: מסך תודה אחיד — יום אפייה, איסוף/משלוח 16:00–18:00, תשלום עכשיו ב-Venmo ──
+const VENMO_LINK = 'https://venmo.com/code?user_id=4416788448151226881&created=1791152174';
+const ZELLE_TO = 'tenebit.soft@gmail.com';
+const VENMO_USERNAME = ''; // שם המשתמש ב-Venmo (בלי @) — אם ממולא, הסכום ממולא אוטומטית באפליקציה
+function finishThankYou(data, total, email) {
+  const amount = (data && typeof data.total === 'number') ? data.total : total;
+  const day = data && data.bakeDate ? (IS_HE ? data.bakeDateHe : data.bakeDateEn) : (BAKE && BAKE.date ? (IS_HE ? BAKE.dateHe : BAKE.dateEn) : '');
+  const isDelivery = typeof deliveryMode !== 'undefined' && deliveryMode === 'delivery';
+  const lines = IS_HE ? [
+    'ההזמנה התקבלה ואושרה! אין צורך לחכות לאישור נוסף.',
+    day ? `📅 יום האפייה: ${day}` : '',
+    isDelivery ? '🚚 המשלוח יגיע אליכם ביום האפייה בין 16:00–18:00.' : '🏠 איסוף ביום האפייה בין 16:00–18:00 · 68 Cortlandt Pl, Tenafly, NJ',
+    email ? `📧 אישור הזמנה נשלח למייל ${email}` : '',
+  ] : [
+    'Your order is received and confirmed! No need to wait for anything else.',
+    day ? `📅 Bake day: ${day}` : '',
+    isDelivery ? '🚚 Your delivery will arrive on the bake day between 4:00–6:00 PM.' : '🏠 Pickup on the bake day between 4:00–6:00 PM · 68 Cortlandt Pl, Tenafly, NJ',
+    email ? `📧 A confirmation email is on its way to ${email}` : '',
+  ];
+  const sub = document.getElementById('ty-sub');
+  if (sub) {
+    sub.innerHTML = lines.filter(Boolean).map(l => l.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))).join('<br>')
+      .replace(/(68 Cortlandt Pl, Tenafly, NJ|[^\s<>]+@[^\s<>]+)/g, '<bdi dir="ltr">$1</bdi>');
+    sub.style.lineHeight = '1.9';
+  }
+  // תשלום — סכום + לינק ל-Venmo, לשלם כבר עכשיו
+  const grid = document.querySelector('#ty-screen .pay-grid');
+  if (!grid) return;
+  const box = grid.parentElement;
+  const intro = box.querySelector('p');
+  if (intro) {
+    intro.innerHTML = bakeTxt(`סכום לתשלום: <b style="font-size:18px;color:var(--brown);">$${amount}</b> — אפשר לשלם כבר עכשיו.`,
+                              `Amount to pay: <b style="font-size:18px;color:var(--brown);">$${amount}</b> — you can pay right now.`);
+  }
+  const note = box.querySelector('.pay-note');
+  if (note) note.textContent = bakeTxt('בהערה ב-Venmo כתבו את שמכם ויום האפייה 🙏', 'Please add your name and bake day in the Venmo note 🙏');
+  const venmo = grid.querySelector('a.pay-btn');
+  if (venmo) {
+    venmo.href = VENMO_USERNAME
+      ? `https://venmo.com/?txn=pay&audience=private&recipients=${encodeURIComponent(VENMO_USERNAME)}&amount=${amount}&note=${encodeURIComponent('Kafri ' + (day || ''))}`
+      : VENMO_LINK;
+    venmo.innerHTML = `<span class="pay-icon">💜</span> ${bakeTxt(`תשלום $${amount} ב-Venmo`, `Pay $${amount} on Venmo`)}`;
+    venmo.style.gridColumn = '1 / -1';
+    venmo.style.background = '#008CFF'; venmo.style.color = '#fff'; venmo.style.borderColor = '#008CFF';
+  }
+  const zelle = grid.querySelector('button.pay-btn');
+  if (zelle) {
+    zelle.innerHTML = `<span class="pay-icon">💙</span> Zelle <span dir="ltr" style="font-weight:400;font-size:13px;">${ZELLE_TO}</span>`;
+    zelle.style.gridColumn = '1 / -1';
+    zelle.onclick = () => {
+      try { navigator.clipboard.writeText(ZELLE_TO); } catch (e) {}
+      alert(bakeTxt(`תשלום ב-Zelle ל: ${ZELLE_TO}\nסכום: $${amount}\n(הכתובת הועתקה)`, `Pay with Zelle to: ${ZELLE_TO}\nAmount: $${amount}\n(address copied)`));
+    };
+  }
 }
 
 // INIT

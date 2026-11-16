@@ -144,6 +144,8 @@ body{font-family:'Frank Ruhl Libre', serif;color:var(--txt);min-height:100vh;dir
   <p class="tagline">Pumpkin, chestnut, caramelized onion and ancient grains. Seasonal flavors, handmade with natural sourdough</p>
   <div class="bake-badge" id="bake-badge">🔥 Baked on Wednesday</div>
   <br>
+  <a class="lang-link home-link" href="../">← Home</a>
+  <span style="opacity:.5;margin:0 6px;">·</span>
   <a class="lang-link" href="order-fall-he.html">← עברית</a>
 </header>
 
@@ -169,7 +171,7 @@ body{font-family:'Frank Ruhl Libre', serif;color:var(--txt);min-height:100vh;dir
     <div class="stitle">💳 Payment</div>
     <p style="font-size:13px;color:var(--txt2);margin-bottom:4px;">Please pay after we confirm your order:</p>
     <div class="pay-grid">
-      <a class="pay-btn" href="https://venmo.com/code?user_id=4416788448151226881&created=1774894628" target="_blank" rel="noopener">
+      <a class="pay-btn" href="https://venmo.com/code?user_id=4416788448151226881&created=1791152174" target="_blank" rel="noopener">
         <span class="pay-icon">💜</span> Venmo
       </a>
       <button class="pay-btn" onclick="showZelle()">
@@ -179,6 +181,7 @@ body{font-family:'Frank Ruhl Libre', serif;color:var(--txt);min-height:100vh;dir
     <p class="pay-note">* Pay only after you receive our confirmation</p>
   </div>
   <button class="neworder-btn" onclick="resetForm()">Place a new order</button>
+  <a class="neworder-btn" href="../" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box;">Back to home page</a>
 </div>
 
 <!-- FORM -->
@@ -374,6 +377,7 @@ async function loadStock() {
     });
     syncQtysToStock();
     renderProducts(); refresh();
+    applyItemParam();
   } catch(e) {
     console.warn('Bake day load failed:', e);
     renderProducts(); refresh();
@@ -519,6 +523,7 @@ async function submitOrder() {
     const data = await (await fetch(SCRIPT_URL + '?' + params.toString(), {method:'GET', redirect:'follow'})).json();
     if (data.success === true) {
       showThankYou(name, sel, total, email);
+      finishThankYou(data, total, email);
     } else if (handleBakeError(data)) {
       resetBtn();
     } else if (data.error === 'form_closed') {
@@ -683,10 +688,91 @@ function handleBakeError(data) {
   }
   return false;
 }
-function bakeThankYouNote(data) {
-  const el = document.getElementById('ty-sub');
-  if (!el || !data || !data.bakeDate) return;
-  el.textContent += ' ' + bakeTxt(`📅 יום האפייה: ${data.bakeDateHe}.`, `📅 Bake day: ${data.bakeDateEn}.`);
+// ── v12.2: הגעה מהקטלוג (?item=id) — המוצר נבחר (כמות 1), גוללים אליו ומדגישים ──
+let __itemApplied = false;
+function applyItemParam() {
+  if (__itemApplied) return;
+  __itemApplied = true;
+  const id = new URLSearchParams(location.search).get('item');
+  if (!id) return;
+  const p = PRODUCTS.find(x => x.id === id);
+  const el = document.getElementById('q-' + id) || document.getElementById('qn-' + id);
+  const pname = p ? (IS_HE ? (p.he || '') : (p.en || p.he || '')).split('(')[0].trim() : '';
+  if (!p || p.hidden || p.soldOut || !el) {
+    const list = document.getElementById('products-list') || document.getElementById('breads-list');
+    if (list && pname) {
+      const n = document.createElement('p');
+      n.style.cssText = 'background:#FDF5E8;border:1px solid #E8C99A;border-radius:9px;padding:10px 12px;font-size:13px;margin-bottom:12px;';
+      n.textContent = bakeTxt(`"${pname}" לא זמין ביום האפייה הזה — אפשר לבחור מהמוצרים האחרים.`, `"${pname}" isn't available for this bake day — please choose from the other items.`);
+      list.parentElement.insertBefore(n, list);
+    }
+    return;
+  }
+  if (!qtys[id]) qtys[id] = 1;
+  syncQtyDisplays();
+  if (typeof refresh === 'function') refresh();
+  else { updateSummary(); if (typeof updateSubmit === 'function') updateSubmit(); }
+  const card = el.closest('.pacc') || el.parentElement;
+  card.style.transition = 'box-shadow .4s, background .4s';
+  card.style.boxShadow = '0 0 0 3px #C9763C'; card.style.borderRadius = '12px'; card.style.background = '#FFF8EE';
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+  setTimeout(() => { card.style.boxShadow = ''; card.style.background = ''; }, 4000);
+}
+
+// ── v12: מסך תודה אחיד — יום אפייה, איסוף/משלוח 16:00–18:00, תשלום עכשיו ב-Venmo ──
+const VENMO_LINK = 'https://venmo.com/code?user_id=4416788448151226881&created=1791152174';
+const ZELLE_TO = 'tenebit.soft@gmail.com';
+const VENMO_USERNAME = ''; // שם המשתמש ב-Venmo (בלי @) — אם ממולא, הסכום ממולא אוטומטית באפליקציה
+function finishThankYou(data, total, email) {
+  const amount = (data && typeof data.total === 'number') ? data.total : total;
+  const day = data && data.bakeDate ? (IS_HE ? data.bakeDateHe : data.bakeDateEn) : (BAKE && BAKE.date ? (IS_HE ? BAKE.dateHe : BAKE.dateEn) : '');
+  const isDelivery = typeof deliveryMode !== 'undefined' && deliveryMode === 'delivery';
+  const lines = IS_HE ? [
+    'ההזמנה התקבלה ואושרה! אין צורך לחכות לאישור נוסף.',
+    day ? `📅 יום האפייה: ${day}` : '',
+    isDelivery ? '🚚 המשלוח יגיע אליכם ביום האפייה בין 16:00–18:00.' : '🏠 איסוף ביום האפייה בין 16:00–18:00 · 68 Cortlandt Pl, Tenafly, NJ',
+    email ? `📧 אישור הזמנה נשלח למייל ${email}` : '',
+  ] : [
+    'Your order is received and confirmed! No need to wait for anything else.',
+    day ? `📅 Bake day: ${day}` : '',
+    isDelivery ? '🚚 Your delivery will arrive on the bake day between 4:00–6:00 PM.' : '🏠 Pickup on the bake day between 4:00–6:00 PM · 68 Cortlandt Pl, Tenafly, NJ',
+    email ? `📧 A confirmation email is on its way to ${email}` : '',
+  ];
+  const sub = document.getElementById('ty-sub');
+  if (sub) {
+    sub.innerHTML = lines.filter(Boolean).map(l => l.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))).join('<br>')
+      .replace(/(68 Cortlandt Pl, Tenafly, NJ|[^\s<>]+@[^\s<>]+)/g, '<bdi dir="ltr">$1</bdi>');
+    sub.style.lineHeight = '1.9';
+  }
+  // תשלום — סכום + לינק ל-Venmo, לשלם כבר עכשיו
+  const grid = document.querySelector('#ty-screen .pay-grid');
+  if (!grid) return;
+  const box = grid.parentElement;
+  const intro = box.querySelector('p');
+  if (intro) {
+    intro.innerHTML = bakeTxt(`סכום לתשלום: <b style="font-size:18px;color:var(--brown);">$${amount}</b> — אפשר לשלם כבר עכשיו.`,
+                              `Amount to pay: <b style="font-size:18px;color:var(--brown);">$${amount}</b> — you can pay right now.`);
+  }
+  const note = box.querySelector('.pay-note');
+  if (note) note.textContent = bakeTxt('בהערה ב-Venmo כתבו את שמכם ויום האפייה 🙏', 'Please add your name and bake day in the Venmo note 🙏');
+  const venmo = grid.querySelector('a.pay-btn');
+  if (venmo) {
+    venmo.href = VENMO_USERNAME
+      ? `https://venmo.com/?txn=pay&audience=private&recipients=${encodeURIComponent(VENMO_USERNAME)}&amount=${amount}&note=${encodeURIComponent('Kafri ' + (day || ''))}`
+      : VENMO_LINK;
+    venmo.innerHTML = `<span class="pay-icon">💜</span> ${bakeTxt(`תשלום $${amount} ב-Venmo`, `Pay $${amount} on Venmo`)}`;
+    venmo.style.gridColumn = '1 / -1';
+    venmo.style.background = '#008CFF'; venmo.style.color = '#fff'; venmo.style.borderColor = '#008CFF';
+  }
+  const zelle = grid.querySelector('button.pay-btn');
+  if (zelle) {
+    zelle.innerHTML = `<span class="pay-icon">💙</span> Zelle <span dir="ltr" style="font-weight:400;font-size:13px;">${ZELLE_TO}</span>`;
+    zelle.style.gridColumn = '1 / -1';
+    zelle.onclick = () => {
+      try { navigator.clipboard.writeText(ZELLE_TO); } catch (e) {}
+      alert(bakeTxt(`תשלום ב-Zelle ל: ${ZELLE_TO}\nסכום: $${amount}\n(הכתובת הועתקה)`, `Pay with Zelle to: ${ZELLE_TO}\nAmount: $${amount}\n(address copied)`));
+    };
+  }
 }
 
 // INIT
