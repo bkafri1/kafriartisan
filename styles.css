@@ -126,6 +126,11 @@ html[dir="rtl"] .btn .arrow { transform: scaleX(-1); }
 .btn.primary:hover { background: var(--terra-dark); border-color: var(--terra-dark); }
 .btn.primary small { color: rgba(245,239,227,.9); }
 
+.browse{display:block;text-align:center;margin-top:16px;color:var(--cream);font-size:15px;text-decoration:none;
+  border-bottom:1px solid transparent;opacity:.9;}
+.browse:hover{opacity:1;text-decoration:underline;}
+html[dir="rtl"] .browse .arrow{display:inline-block;transform:scaleX(-1);}
+
 /* ---------- Footer ---------- */
 footer { padding-top: 26px; text-align: center; }
 .contact { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
