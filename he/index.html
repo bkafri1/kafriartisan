@@ -43,11 +43,23 @@
       מהתנור או מקבלים משלוח עד הבית בברגן קאונטי.
     </p>
 
+    <a class="tg-banner" id="tg-banner" href="../catalog/order-tg-he.html">
+      <img src="../images/thanksgiving-hero.jpg" alt="" loading="lazy">
+      <span class="tg-txt"><small>ההזמנות לחג ההודיה פתוחות</small>
+        <b>חלות, לחמים ובבקות לחג</b>
+        <span>איסוף ברביעי 25/11 או ביום החג · להזמנה ←</span></span>
+    </a>
+<script>
+(function(){ // hides the Thanksgiving banner after Thanksgiving (New York time)
+  var d = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  if (d > '2026-11-26') { var b = document.getElementById('tg-banner'); if (b) b.remove(); }
+})();
+</script>
+
     <section class="schedule" aria-labelledby="sched-h">
       <h2 id="sched-h">ימי אפייה</h2>
       <ul>
         <li><span class="day">שני וחמישי</span><span class="what">לחמי מחמצת</span></li>
-        <li><span class="day">רביעי</span><span class="what">קולקציית סתיו</span></li>
         <li><span class="day">שישי</span><span class="what">חלות ובבקות</span></li>
       </ul>
     </section>
@@ -55,9 +67,6 @@
     <nav class="orders" aria-label="הזמנה באתר">
       <a class="btn primary" href="../catalog/order-he.html">
         <span>הזמנת לחמי מחמצת<small>שני וחמישי</small></span><span class="arrow">→</span>
-      </a>
-      <a class="btn" href="../catalog/order-fall-he.html">
-        <span>הזמנת קולקציית סתיו<small>רביעי</small></span><span class="arrow">→</span>
       </a>
       <a class="btn" href="../catalog/order-hala-he.html">
         <span>הזמנת חלות ובבקות<small>שישי</small></span><span class="arrow">→</span>
