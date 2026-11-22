@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Our Breads · Kafri Artisan Breads</title>
+<meta name="description" content="The full Kafri Artisan Breads catalog: sourdough, the fall collection, challah and babka. Baked in small batches in Tenafly, NJ.">
+<meta name="theme-color" content="#12283f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Heebo:wght@400;500;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1B3A5B; --blue-deep:#12283f; --cream:#F5EFE3; --paper:#FBF8F2; --terra:#C9763C; --terra-dark:#a85f2c;
+  --ink:#24303d; --ink-soft:#5d6875; --line:#E6DCCB; --chip:#EFE5D4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Lato',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+html[lang="he"] body{font-family:'Heebo',system-ui,sans-serif;}
+h1,h2,h3{font-family:'Frank Ruhl Libre',Georgia,serif;font-weight:700;}
+a{color:inherit;}
+
+/* top bar */
+.top{background:var(--blue-deep);color:var(--cream);}
+.top-in{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.top a{text-decoration:none;font-size:14px;opacity:.85;}
+.top a:hover{opacity:1;}
+.brand{font-family:'Frank Ruhl Libre',serif;font-size:18px;opacity:1 !important;}
+.lang-btn{background:none;border:1px solid rgba(245,239,227,.35);color:var(--cream);border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;cursor:pointer;}
+
+/* hero */
+.hero{background:var(--blue-deep);color:var(--cream);text-align:center;padding:26px 20px 34px;}
+.hero h1{font-size:clamp(32px,6vw,46px);line-height:1.1;}
+.hero p{max-width:560px;margin:10px auto 0;color:rgba(245,239,227,.78);font-size:16px;line-height:1.6;}
+
+/* section nav */
+.nav{position:sticky;top:0;z-index:5;background:rgba(251,248,242,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.nav-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
+.nav-in::-webkit-scrollbar{display:none;}
+.nav a{flex-shrink:0;text-decoration:none;font-size:14px;padding:8px 14px;border-radius:999px;background:var(--chip);color:var(--blue);font-weight:700;white-space:nowrap;}
+.nav a small{font-weight:400;color:var(--ink-soft);margin-inline-start:6px;}
+
+/* sections */
+main{max-width:1080px;margin:0 auto;padding:8px 16px 40px;}
+.sec{padding-top:26px;scroll-margin-top:60px;}
+.banner{position:relative;border-radius:18px;overflow:hidden;min-height:190px;display:flex;align-items:flex-end;background:var(--blue) center/cover no-repeat;color:var(--cream);}
+.banner::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,40,63,.15) 0%,rgba(18,40,63,.85) 100%);}
+.banner-in{position:relative;padding:22px;width:100%;display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+.banner h2{font-size:clamp(26px,4.5vw,34px);line-height:1.1;}
+.banner .day{display:inline-block;margin-top:6px;font-size:13px;font-weight:700;letter-spacing:.04em;color:#F3C9A5;}
+.banner p{margin-top:6px;font-size:14px;color:rgba(245,239,227,.85);max-width:520px;line-height:1.5;}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:var(--terra);color:#fff;font-weight:700;font-size:15px;padding:11px 18px;border-radius:12px;white-space:nowrap;transition:background .2s;}
+.btn:hover{background:var(--terra-dark);}
+html[dir="rtl"] .arr{transform:scaleX(-1);display:inline-block;}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin-top:18px;}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;}
+.ph{aspect-ratio:4/3;background:var(--cream);position:relative;overflow:hidden;}
+.ph img{width:100%;height:100%;object-fit:cover;display:block;}
+.ph.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#b9a68a;
+  background:radial-gradient(circle at 30% 20%,#fff8ec 0%,var(--cream) 60%,#ece1cd 100%);}
+.ph.empty svg{width:54px;height:54px;opacity:.7;}
+.ph.empty span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;}
+.price{position:absolute;top:10px;inset-inline-end:10px;background:rgba(255,255,255,.94);color:var(--blue);font-weight:700;font-size:15px;padding:4px 10px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1;}
+.card h3{font-size:19px;line-height:1.25;color:var(--blue);}
+.sub{font-size:12px;color:var(--ink-soft);margin-top:3px;}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--terra-dark);}
+.desc{font-size:14px;line-height:1.6;color:var(--ink-soft);margin-top:9px;}
+details{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px;}
+summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--blue);list-style:none;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:" ▾";font-size:10px;}
+details[open] summary::after{content:" ▴";}
+.k{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--terra);margin-top:10px;}
+html[lang="he"] .k{letter-spacing:0;font-size:12px;}
+.v{font-size:13px;line-height:1.55;color:var(--ink-soft);margin-top:2px;}
+.nut{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px;}
+.nut div{background:var(--paper);border:1px solid var(--line);border-radius:8px;text-align:center;padding:6px 2px;}
+.nut b{display:block;font-size:14px;color:var(--blue);}
+.nut i{font-style:normal;font-size:10px;color:var(--ink-soft);}
+.card.special{border:2px solid var(--terra);}
+.card.special .badge{background:var(--terra);color:#fff;}
+.order{margin-top:auto;padding-top:14px;}
+.order .btn{width:100%;justify-content:center;font-size:14px;padding:10px 14px;background:var(--blue);}
+.order .btn:hover{background:var(--blue-deep);}
+
+footer{text-align:center;padding:26px 16px 40px;color:var(--ink-soft);font-size:13px;}
+footer a{color:var(--blue);font-weight:700;}
+@media(max-width:560px){
+  .banner-in{padding:18px;}.btn{font-size:14px;}
+  .grid{grid-template-columns:1fr;gap:12px;}
+  .card{display:grid;grid-template-columns:112px 1fr;}
+  .ph{aspect-ratio:auto;min-height:100%;}
+  .ph.empty span{display:none;}
+  .ph.empty svg{width:34px;height:34px;}
+  .price{top:8px;inset-inline-end:auto;inset-inline-start:8px;font-size:13px;padding:3px 8px;}
+  .body{padding:12px 14px 14px;}
+  .card h3{font-size:17px;}
+  .desc{font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  details[open] ~ .order, .order{grid-column:1 / -1;}
+}
+</style>
+</head>
+<body>
+<div class="top"><div class="top-in">
+  <a id="home-link" href="index.html">← Home</a>
+  <a class="brand" id="brand" href="index.html">Kafri Artisan Breads</a>
+  <button class="lang-btn" id="lang-btn" onclick="toggleLang()">עברית</button>
+</div></div>
+<header class="hero"><h1 id="h1">Our Breads</h1><p id="hero-p"></p></header>
+<nav class="nav"><div class="nav-in" id="nav"></div></nav>
+<main id="main"></main>
+<footer id="footer"></footer>
+
+<script>
+const CATALOG = [{"key": "sourdough", "titleHe": "לחמי מחמצת", "titleEn": "Sourdough", "dayHe": "נאפים בימי שני וחמישי", "dayEn": "Baked Mondays & Thursdays", "introHe": "מחמצת טבעית, תסיסה ארוכה וקמח אורגני של Janie's Mill.", "introEn": "Natural starter, long fermentation, organic flour from Janie's Mill.", "banner": "images/bg-sourdough.jpg", "orderHe": "catalog/order-he.html", "orderEn": "catalog/order-en.html", "items": [{"id": "baker-special", "special": true, "nameHe": "לחם דרום אפריקאי", "nameEn": "South African Bread", "subHe": "", "subEn": "", "price": null, "badgesHe": ["⭐ לחם האופה", "פרווה"], "badgesEn": ["⭐ Baker's Special", "Parve"], "descHe": "לחם תבנית בסגנון דרום אפריקאי — קמח מלא, סובין ושיבולת שועל, עם נגיעה של דבש. רך, מלא בדגנים, ומושלם לכריכים.", "descEn": "A hearty South African–style tin loaf with whole wheat, bran and oats and a touch of honey. Soft, full of whole grains, and perfect for sandwiches.", "img": "baker-special", "ingHe": "קמח לחם, מים, קמח מלא, סובין, שיבולת שועל, שמן חמניות, דבש, סוכר, מלח, שמרים יבשים", "ingEn": "Bread flour, water, whole wheat flour, wheat bran, rolled oats, sunflower oil, honey, sugar, salt, dry yeast"}, {"id": "spelt", "nameHe": "לחם כוסמין מלא מחמצת", "nameEn": "Whole Spelt Sourdough", "subHe": "", "subEn": "", "price": 12, "badgesHe": ["פרווה"], "badgesEn": ["Parve"], "descHe": "75% קמח כוסמין מלא עם מחמצת טבעית – עשיר בסיבים, מינרלים וחלבון. הכוסמין קל לעיכול והמחמצת מורידה את האינדקס הגליקמי.", "descEn": "75% whole spelt with natural sourdough — rich in fiber, minerals and protein. Spelt is easier to digest and the sourdough lowers the glycemic index.", "ingHe": "קמח לחם, קמח כוסמין מלא, מים, מחמצת טבעית, מלח", "ingEn": "Bread flour, whole spelt flour, water, natural sourdough starter, salt", "nut": {"cal": 89, "carbs": 16, "protein": 3.5, "fat": 1.2, "calHe": "קל׳ לפרוסה", "calEn": "cal/slice"}, "img": null}, {"id": "nuts", "nameHe": "לחם אגוזים", "nameEn": "Walnut Sourdough", "subHe": "", "subEn": "", "price": 10, "badgesHe": ["פרווה"], "badgesEn": ["Parve"], "descHe": "מחמצת קמח מלא עם אגוזי מלך – מקור מצוין לאומגה 3, נוגדי חמצון וסיבים. אגוזי המלך מוסיפים שומן בריא ושובע ממושך.", "descEn": "Whole wheat sourdough with walnuts — excellent source of omega-3, antioxidants and fiber. Walnuts add healthy fat and lasting satiety.", "ingHe": "קמח מלא, קמח לחם, מים, מחמצת טבעית, אגוזי מלך, מלח", "ingEn": "Whole wheat flour, bread flour, water, natural sourdough starter, walnuts, salt", "nut": {"cal": 104, "carbs": 15, "protein": 3.8, "fat": 4.2, "calHe": "קל׳ לפרוסה", "calEn": "cal/slice"}, "img": "nuts"}, {"id": "olives", "nameHe": "לחם זיתים", "nameEn": "Olive Sourdough", "subHe": "", "subEn": "", "price": 10, "badgesHe": ["פרווה"], "badgesEn": ["Parve"], "descHe": "מחמצת קמח מלא עם זיתים – שומן חד-בלתי-רווי לבריאות הלב. הקל ביותר בסדרה, עשיר בטעם ים תיכוני.", "descEn": "Whole wheat sourdough with olives — heart-healthy monounsaturated fats. The lightest loaf in the range, full of Mediterranean flavor.", "ingHe": "קמח מלא, קמח לחם, מים, מחמצת טבעית, זיתים, מלח", "ingEn": "Whole wheat flour, bread flour, water, natural sourdough starter, olives, salt", "nut": {"cal": 85, "carbs": 15, "protein": 3.2, "fat": 1.8, "calHe": "קל׳ לפרוסה", "calEn": "cal/slice"}, "img": null}, {"id": "shiur", "nameHe": "לחם שיאור", "nameEn": "Pure Sourdough (Shiur)", "subHe": "", "subEn": "", "price": 10, "badgesHe": ["פרווה"], "badgesEn": ["Parve"], "descHe": "ארבעה מרכיבים בלבד. המחמצת מפרקת פיטאטים, משפרת ספיגת מינרלים ומורידה את האינדקס הגליקמי. נקי, פשוט ומזין.", "descEn": "Four ingredients only. The sourdough breaks down phytates, improves mineral absorption and lowers the glycemic index. Clean and nourishing.", "ingHe": "קמח לחם, קמח מלא, מים, מחמצת טבעית, מלח", "ingEn": "Bread flour, whole wheat flour, water, natural sourdough starter, salt", "nut": {"cal": 89, "carbs": 17, "protein": 3.4, "fat": 0.8, "calHe": "קל׳ לפרוסה", "calEn": "cal/slice"}, "img": null}, {"id": "kasten", "nameHe": "לחם קסטן בריאות", "nameEn": "Kasten Health Loaf", "subHe": "", "subEn": "", "price": 12, "badgesHe": ["פרווה ⭐"], "badgesEn": ["Parve ⭐"], "descHe": "קמח לחם, קמח מלא ושיבולת שועל – הבטא-גלוקן שבשיבולת שועל מאזן סוכר וכולסטרול. נאפה בתבנית סגורה לפרוסות אחידות לסנדוויץ׳.", "descEn": "Bread flour, whole wheat and oats — oat beta-glucan helps balance blood sugar and cholesterol. Baked in closed tin for perfect sandwich slices.", "ingHe": "קמח לחם, מים, קמח מלא, פתיתי שיבולת שועל, מלח, סוכר, שמן, שמרים", "ingEn": "Bread flour, water, whole wheat flour, rolled oats, salt, sugar, oil, yeast", "nut": {"cal": 94, "carbs": 17, "protein": 3.5, "fat": 1.5, "calHe": "קל׳ לפרוסה", "calEn": "cal/slice"}, "img": null}, {"id": "bagel-white", "nameHe": "בייגל ירושלמי לבן", "nameEn": "Jerusalem Bagels – White (3 pack)", "subHe": "3 במנה", "subEn": "", "price": 10, "badgesHe": ["פרווה"], "badgesEn": ["Parve"], "descHe": "ישר מרחובות ירושלים. פריך מבחוץ, רך מבפנים. ציפוי שומשום עשיר בסידן, ברזל וויטמין E.", "descEn": "Straight from Jerusalem. Crispy outside, soft inside. Sesame coating rich in calcium, iron and vitamin E.", "ingHe": "קמח לחם, מים, שמן זית, סוכר, מלח, שמרים יבשים, שומשום לבן", "ingEn": "Bread flour, water, olive oil, sugar, salt, dry yeast, white sesame", "nut": {"cal": 283, "carbs": 38, "protein": 7.2, "fat": 5.8, "calHe": "קל׳ למקל", "calEn": "cal/bagel"}, "img": null}, {"id": "rolls-school", "nameHe": "לחמניות בית ספר", "nameEn": "School Rolls (5-pack)", "subHe": "5 במנה", "subEn": "", "price": 10, "badgesHe": ["פרווה"], "badgesEn": ["Parve"], "descHe": "לחמניות רכות ועדינות שנאפו במיוחד לתיק האוכל של בית הספר, מקמחים אורגניים איכותיים. תערובת קמח לבן וסמולינה מעניקה מרקם רך עם נגיעת מתיקות טבעית — בלי חלב או ביצים, פרווה ומושלמות לכל ארוחה.", "descEn": "Soft, gentle rolls made with quality organic flours, perfect for the school lunchbox. A blend of white and semolina flour gives a tender crumb with a natural touch of sweetness — dairy-free and pareve, perfect for any meal.", "ingHe": "קמח לבן אורגני, קמח סמולינה אורגני, מים, שמרים יבשים, מלח, שמן", "ingEn": "Organic white flour, organic semolina flour, water, dry yeast, salt, oil", "nut": {"cal": 230, "carbs": 42, "protein": 7, "fat": 4, "calHe": "קל׳ ללחמנייה", "calEn": "cal/roll"}, "img": null}, {"id": "health", "nameHe": "לחם בריאות", "nameEn": "Health Loaf", "subHe": "", "subEn": "", "price": 12, "badgesHe": ["גלוטן נמוך"], "badgesEn": ["Low Gluten"], "descHe": "כוסמין מלא, שיבולת שועל וזרעי פשתן – שלושה מקורות סיבים בלחם אחד. פשתן עשיר באומגה 3 ולינגנים. מכיל מעט גלוטן בלבד.", "descEn": "Whole spelt, oats and flaxseed — three fiber sources in one loaf. Flaxseed rich in omega-3 and lignans. Low gluten only.", "ingHe": "קמח כוסמין מלא, קמח לחם, מים, מחמצת טבעית, פתיתי שיבולת שועל, זרעי פשתן, מלח", "ingEn": "Whole spelt flour, bread flour, water, natural sourdough starter, rolled oats, flaxseed, salt", "nut": {"cal": 96, "carbs": 15, "protein": 3.8, "fat": 2.1, "calHe": "קל׳ לפרוסה", "calEn": "cal/slice"}, "img": null}]}, {"key": "fall", "titleHe": "קולקציית סתיו", "titleEn": "Fall Collection", "dayHe": "נאפים בימי רביעי", "dayEn": "Baked Wednesdays", "introHe": "דלעת, ערמונים, בצל מקורמל ודגנים עתיקים — טעמים עונתיים, לזמן מוגבל.", "introEn": "Pumpkin, chestnut, caramelized onion and ancient grains — seasonal, for a limited time.", "banner": "images/fall-hero.jpg", "orderHe": "catalog/order-fall-he.html", "orderEn": "catalog/order-fall-en.html", "items": [{"id": "fall-chestnut", "nameHe": "מחמצת ערמונים", "nameEn": "Chestnut Sourdough", "subHe": "", "subEn": "", "price": 14, "badgesHe": ["טבעוני"], "badgesEn": ["Vegan"], "descHe": "לחם מחמצת מקמח מלא, קמח לחם וקמח ערמונים, עם שברי ערמונים קלויים. לחם בריא עם טעם ערמונים עשיר ואגוזי.", "descEn": "Whole wheat, bread flour and chestnut flour, studded with roasted chestnut pieces. Wholesome, with a rich, nutty chestnut flavor.", "img": null}, {"id": "fall-onion", "nameHe": "מחמצת בצל מקורמל", "nameEn": "Caramelized Onion Sourdough", "subHe": "", "subEn": "", "price": 10, "badgesHe": ["טבעוני"], "badgesEn": ["Vegan"], "descHe": "לחם המחמצת האהוב, עם בצל מקורמל לאט שנותן לו ארומה עמוקה וטעם מתקתק-מלוח. בדיוק בשביל הסתיו.", "descEn": "Our signature sourdough, folded with slow-caramelized onions for a deep aroma and a sweet-savory flavor made for fall.", "img": null}, {"id": "fall-pumpkin", "nameHe": "לחם דלעת", "nameEn": "Pumpkin Bread", "subHe": "", "subEn": "", "price": 10, "badgesHe": ["טבעוני"], "badgesEn": ["Vegan"], "descHe": "קמחים איכותיים ומחית דלעת, שנותנים ללחם צבע זהוב, מרקם רך ולח וטעם עדין ומיוחד. תטעמו ותבינו.", "descEn": "Quality flours and real pumpkin purée give this loaf a golden color, a soft, moist crumb and a uniquely gentle flavor. One bite and you'll get it.", "img": null}, {"id": "fall-speltrye", "nameHe": "כוסמין ושיפון", "nameEn": "Spelt & Rye", "subHe": "", "subEn": "", "price": 10, "badgesHe": ["טבעוני", "דל גלוטן"], "badgesEn": ["Vegan", "Low Gluten"], "descHe": "לחם מקמחי כוסמין ושיפון, עם גרעיני חמנייה. בריא, עשיר וטעים, ובמיוחד ביום שאחרי. דל גלוטן לעומת לחם חיטה רגיל (אינו ללא גלוטן).", "descEn": "Made with spelt and rye flours and sunflower seeds. Hearty, wholesome, and even better the next day. Lower in gluten than regular wheat bread (not gluten-free).", "img": null}, {"id": "fall-cookie", "nameHe": "עוגיית תפוח-קינמון — יחידה", "nameEn": "Apple Cinnamon Oat Cookie — Single", "subHe": "", "subEn": "", "price": 4, "badgesHe": ["חלבי"], "badgesEn": ["Dairy"], "descHe": "שיבולת שועל, מייפל, סוכר חום, קינמון ותפוחים מיובשים, בעוגייה גדולה ועשירה עם מתיקות של סתיו.", "descEn": "Oats, maple, brown sugar, cinnamon and dried apples in one big, rich cookie with all the sweetness of fall.", "img": null}, {"id": "fall-cookie3", "nameHe": "מארז 3 עוגיות", "nameEn": "3-Cookie Pack", "subHe": "", "subEn": "", "price": 10, "badgesHe": ["חלבי", "משתלם"], "badgesEn": ["Dairy", "Best Value"], "descHe": "שיבולת שועל, מייפל, סוכר חום, קינמון ותפוחים מיובשים, בעוגייה גדולה ועשירה עם מתיקות של סתיו.", "descEn": "Oats, maple, brown sugar, cinnamon and dried apples in one big, rich cookie with all the sweetness of fall.", "img": null}], "hidden": true}, {"key": "challah", "titleHe": "חלות ובבקות", "titleEn": "Challah & Babka", "dayHe": "נאפים בימי שישי", "dayEn": "Baked Fridays", "introHe": "חלות, לחמניות ובבקות — טריים לשולחן השבת.", "introEn": "Challahs, rolls and babkas — fresh for the Shabbat table.", "banner": "images/bg-challah.jpg", "orderHe": "catalog/order-hala-he.html", "orderEn": "catalog/order-hala-en.html", "items": [{"id": "challah-spelt", "nameHe": "חלת כוסמין", "nameEn": "Spelt Challah", "subHe": "קלועה עגולה · רכה וזהובה", "subEn": "Round braided · soft & golden", "price": 12, "badgesHe": ["כוסמין"], "badgesEn": ["Spelt"], "descHe": "חלה קלועה עגולה מקמח כוסמין לבן — רכה, זהובה ומלאת טעם. מושלמת לשולחן שבת.", "descEn": "A round braided challah made with white spelt flour — soft, golden, and full of flavor. Perfect for the Shabbat table.", "ingHe": "קמח כוסמין לבן, מים, ביצים, אבקת חלב, שמרים יבשים, סוכר, חמאה, מלח", "ingEn": "White spelt flour, water, eggs, milk powder, dry yeast, sugar, butter, salt", "weightHe": "600 גרם", "weightEn": "600g", "noteHe": "", "noteEn": "", "img": "challah-spelt"}, {"id": "challah-shabbat", "nameHe": "חלת שבת - פרווה", "nameEn": "Shabbat Challah – Pareve", "subHe": "איכותית, עם מתיקות עדינה · פרווה", "subEn": "Premium, with a gentle sweetness · Pareve", "price": 12, "badgesHe": ["פרווה"], "badgesEn": ["Parve"], "descHe": "חלה פרווה בשיטת טנגז'ונג — טכניקה שמעניקה מרקם רך ואוורירי במיוחד ושומרת על טריות לאורך זמן. מתיקות עדינה מדבש איכותי, עם נגיעה של קינמון. מושלמת לשולחן שבת.", "descEn": "A pareve challah made with the tangzhong method — a technique that gives an extra-soft, pillowy crumb and keeps the bread fresh longer. Gently sweetened with quality honey, with a hint of cinnamon. Perfect for the Shabbat table.", "ingHe": "קמח, מים, ביצים, חלמון ביצה, דבש, שמן חמניות, שמרים יבשים, תמצית וניל, קינמון, מלח", "ingEn": "Flour, water, eggs, egg yolk, honey, sunflower oil, dry yeast, vanilla extract, cinnamon, salt", "weightHe": "700 גרם", "weightEn": "700g", "noteHe": "✦ פרווה · מוכנה בשיטת טנגז'ונג — לרכות ואריכות טריות", "noteEn": "✦ Parve · Made with the tangzhong method — for extra softness and freshness", "img": "challah-shabbat"}, {"id": "rolls-spelt", "nameHe": "לחמניות כוסמין", "nameEn": "Spelt Rolls", "subHe": "כוסמין · 5 לחמניות במנה", "subEn": "Spelt · 5 rolls per pack", "price": 12, "badgesHe": ["5 במנה"], "badgesEn": ["5-pack"], "descHe": "אותו בצק איכותי של חלת הכוסמין — מעוצב כלחמניות אישיות. מושלם לשולחן שבת או לכריך יומיומי.", "descEn": "The same quality dough as our spelt challah — shaped into individual rolls. Perfect for the Shabbat table or everyday sandwiches.", "ingHe": "קמח כוסמין לבן, מים, ביצים, אבקת חלב, שמרים יבשים, סוכר, חמאה, מלח", "ingEn": "White spelt flour, water, eggs, milk powder, dry yeast, sugar, butter, salt", "weightHe": "5 לחמניות / שקית · 100 גרם כל אחת", "weightEn": "5 rolls / bag · 100g each", "noteHe": "✦ מושלם לשולחן שבת או לכריך יומיומי", "noteEn": "✦ Perfect for Shabbat or everyday sandwiches", "img": "rolls-spelt"}, {"id": "rolls-whole", "nameHe": "לחמניות קמח מלא", "nameEn": "Whole Wheat Rolls", "subHe": "קמח מלא · 5 לחמניות במנה", "subEn": "Whole Wheat · 5 rolls per pack", "price": 12, "badgesHe": ["5 במנה · פרווה"], "badgesEn": ["5-pack · Parve"], "descHe": "אותו בצק איכותי של חלת הקמח המלא — מעוצב כלחמניות אישיות פרווה.", "descEn": "The same quality whole wheat dough as our challah — shaped into individual parve rolls.", "ingHe": "קמח מלא, קמח לבן, מים, שמרים יבשים, דבש, שמן חמניות, ביצים, מלח", "ingEn": "Whole wheat flour, white flour, water, dry yeast, honey, sunflower oil, eggs, salt", "weightHe": "5 לחמניות / שקית · 100 גרם כל אחת", "weightEn": "5 rolls / bag · 100g each", "noteHe": "✦ פרווה · מושלם לכריך יומיומי", "noteEn": "✦ Parve · Perfect for everyday sandwiches", "img": "rolls-whole"}, {"id": "babka-choco", "nameHe": "בבקת שוקולד אישית", "nameEn": "Chocolate Babka (single)", "subHe": "שבלול שוקולד · מנה אישית", "subEn": "Chocolate swirl · individual portion", "price": 6, "badgesHe": ["שבלול אישי"], "badgesEn": ["Single"], "descHe": "שבלול בבקה אישי עם מילוי שוקולד עשיר. בצק עשיר בחמאה, פריך מבחוץ ורך מבפנים.", "descEn": "An individual chocolate babka swirl with rich filling. Buttery dough, crispy outside, soft inside.", "ingHe": "חמאה, חלב מלא, ביצים, קמח לחם, שמרים טריים, סוכר, מלח + מילוי שוקולד", "ingEn": "Butter, whole milk, eggs, bread flour, fresh yeast, sugar, salt + chocolate filling", "weightHe": "מנה אישית", "weightEn": "Individual portion", "noteHe": "", "noteEn": "", "img": "babka-choco"}, {"id": "babka-choco-whole", "nameHe": "בבקת שוקולד שלמה", "nameEn": "Chocolate Babka (whole)", "subHe": "צמת שוקולד · עוגה שלמה", "subEn": "Chocolate braid · whole cake", "price": 17, "badgesHe": ["עוגה שלמה"], "badgesEn": ["Whole cake"], "descHe": "בבקת שוקולד שלמה — צמת מרשימה עם שכבות שוקולד עשיר. מושלמת לאירוח או לחגוג.", "descEn": "A full chocolate babka loaf — an impressive braid with layers of rich chocolate. Perfect for entertaining.", "ingHe": "חמאה, חלב מלא, ביצים, קמח לחם, שמרים טריים, סוכר, מלח + מילוי שוקולד", "ingEn": "Butter, whole milk, eggs, bread flour, fresh yeast, sugar, salt + chocolate filling", "weightHe": "עוגה שלמה", "weightEn": "Whole cake", "noteHe": "", "noteEn": "", "img": "babka-choco-whole"}, {"id": "babka-cinnamon", "nameHe": "בבקת רוגלך שוקולד מלאה", "nameEn": "Rogalach Chocolate Babka (family)", "subHe": "רוגלך שוקולד בערמה · מנה משפחתית", "subEn": "Cinnamon swirl · individual portion", "price": 22, "badgesHe": ["עוגה משפחתית"], "badgesEn": ["Whole cake"], "descHe": "בבקת רוגלך שוקולד שלמה ערמת רוגלך עם שכבות שוקולד עשיר. מושלמת לאירוח או לחגוג.", "descEn": "An individual cinnamon babka swirl with brown sugar and cinnamon filling. Buttery dough with the scent of home.", "ingHe": "חמאה, חלב מלא, ביצים, קמח לחם, שמרים טריים, סוכר, מלח + מילוי שוקולד", "ingEn": "Butter, whole milk, eggs, bread flour, fresh yeast, sugar, salt + cinnamon filling", "weightHe": "מנה משפחתית", "weightEn": "Individual portion", "noteHe": "", "noteEn": "", "img": "babka-cinnamon"}, {"id": "babka-cinnamon-whole", "nameHe": "בבקת קינמון שלמה", "nameEn": "Cinnamon Babka (whole)", "subHe": "צמת קינמון · עוגה שלמה", "subEn": "Cinnamon braid · whole cake", "price": 17, "badgesHe": ["עוגה שלמה"], "badgesEn": ["Whole cake"], "descHe": "בבקת קינמון שלמה — צמת מרשימה עם שכבות קינמון וסוכר חום. ריח בית אמיתי.", "descEn": "A full cinnamon babka loaf with layers of cinnamon and brown sugar. The real scent of home baking.", "ingHe": "חמאה, חלב מלא, ביצים, קמח לחם, שמרים טריים, סוכר, מלח + מילוי קינמון", "ingEn": "Butter, whole milk, eggs, bread flour, fresh yeast, sugar, salt + cinnamon filling", "weightHe": "עוגה שלמה", "weightEn": "Whole cake", "noteHe": "", "noteEn": "", "img": "babka-cinnamon-whole"}, {"id": "babka-apple-whole", "nameHe": "בבקת תפוחים", "nameEn": "Apple Babka", "subHe": "פרנז'יפן שקדים ותפוחים טריים · עונתי", "subEn": "Almond frangipane & fresh apple · Seasonal", "price": 17, "badgesHe": ["עוגה שלמה · עונתי"], "badgesEn": ["Whole cake · Seasonal"], "descHe": "בבקת תפוחים עונתית — קרם שקדים (פרנז'יפן) בניחוח דבש מקורמל, וניל, בורבון ותבלינים חמים, עם תפוחים טריים גרוסים מעל. טעם של סתיו בכל פרוסה.", "descEn": "A seasonal apple babka — almond frangipane cream scented with caramelized honey, vanilla, bourbon and warm spices, topped with fresh grated apple. A taste of autumn in every slice.", "ingHe": "חמאה, חלב מלא, ביצים, קמח לחם, שמרים טריים, סוכר, מלח + מילוי פרנז'יפן שקדים ותפוחים טריים", "ingEn": "Butter, whole milk, eggs, bread flour, fresh yeast, sugar, salt + almond frangipane and fresh apple filling", "weightHe": "עוגה שלמה", "weightEn": "Whole cake", "noteHe": "✦ פריט עונתי · לזמן מוגבל", "noteEn": "✦ Seasonal · Limited time", "img": null}]}].filter(s => !s.hidden);
+const T = {
+  en: { title:'Our Breads', hero:'Everything we bake, by bake day. Tap a bread for the details, then order it for its next bake.',
+        home:'← Home', homeHref:'index.html', other:'עברית', order:'Order', orderAll:'Order', details:'Details & ingredients',
+        ing:'Ingredients', nutrition:'Nutrition', weight:'Size', soon:'Photo coming soon', footer:'Questions? Text (201) 640-7542' },
+  he: { title:'הלחמים שלנו', hero:'כל מה שאנחנו אופים, לפי ימי האפייה. לחצו על לחם לפרטים, ומשם להזמנה ליום האפייה הקרוב.',
+        home:'→ דף הבית', homeHref:'he/', other:'English', order:'להזמנה', orderAll:'להזמנה', details:'פרטים ומרכיבים',
+        ing:'מרכיבים', nutrition:'ערכים תזונתיים', weight:'גודל', soon:'תמונה בקרוב', footer:'שאלות? הודעה ל-(201) 640-7542' },
+};
+const WHEAT = '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M32 60V22"/><path d="M32 22c-6-2-9-8-8-14 6 1 9 7 8 14zM32 22c6-2 9-8 8-14-6 1-9 7-8 14z"/><path d="M32 34c-6-2-10-7-9-13 6 1 10 6 9 13zM32 34c6-2 10-7 9-13-6 1-10 6-9 13z"/><path d="M32 46c-6-2-10-7-9-13 6 1 10 6 9 13zM32 46c6-2 10-7 9-13-6 1-10 6-9 13z"/></svg>';
+let lang = (new URLSearchParams(location.search).get('lang') === 'he') ? 'he' : 'en';
+
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function L(o, k){ return o[k + (lang === 'he' ? 'He' : 'En')]; }
+
+function card(sec, it){
+  const t = T[lang];
+  const name = L(it, 'name'), sub = L(it, 'sub'), badges = L(it, 'badges') || [];
+  const ing = L(it, 'ing'), weight = L(it, 'weight'), note = L(it, 'note');
+  const n = it.nut;
+  const det = (ing || n || weight || note) ? `<details><summary>${t.details}</summary>
+      ${ing ? `<div class="k">${t.ing}</div><div class="v">${esc(ing)}</div>` : ''}
+      ${n ? `<div class="k">${t.nutrition}</div><div class="nut">
+        <div><b>${n.cal}</b><i>${esc(lang === 'he' ? n.calHe : n.calEn)}</i></div>
+        <div><b>${n.carbs}g</b><i>${lang === 'he' ? 'פחמימות' : 'Carbs'}</i></div>
+        <div><b>${n.protein}g</b><i>${lang === 'he' ? 'חלבון' : 'Protein'}</i></div>
+        <div><b>${n.fat}g</b><i>${lang === 'he' ? 'שומן' : 'Fat'}</i></div></div>` : ''}
+      ${weight ? `<div class="k">${t.weight}</div><div class="v">${esc(weight)}</div>` : ''}
+      ${note ? `<div class="v" style="margin-top:8px;">${esc(note)}</div>` : ''}
+    </details>` : '';
+  const href = (lang === 'he' ? sec.orderHe : sec.orderEn) + '?item=' + encodeURIComponent(it.id);
+  return `<article class="card${it.special ? ' special' : ''}" id="p-${it.id}">
+    <div class="ph ${it.img ? '' : 'empty'}">
+      ${it.img ? `<img src="images/products/${it.img}.jpg" alt="${esc(name)}" loading="lazy">` : `${WHEAT}<span>${t.soon}</span>`}
+      ${it.price ? `<div class="price">$${it.price}</div>` : ''}
+    </div>
+    <div class="body">
+      <h3>${esc(name)}</h3>
+      ${sub ? `<div class="sub">${esc(sub)}</div>` : ''}
+      ${badges.length ? `<div class="badges">${badges.map(b => `<span class="badge">${esc(b)}</span>`).join('')}</div>` : ''}
+      ${L(it, 'desc') ? `<p class="desc">${esc(L(it, 'desc'))}</p>` : ''}
+      ${det}
+      <div class="order"><a class="btn" href="${href}">${t.order} <span class="arr">→</span></a></div>
+    </div>
+  </article>`;
+}
+
+function render(){
+  const t = T[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+  document.title = t.title + (lang === 'he' ? ' · לחמים מכפרי' : ' · Kafri Artisan Breads');
+  document.getElementById('h1').textContent = t.title;
+  document.getElementById('hero-p').textContent = t.hero;
+  const home = document.getElementById('home-link'); home.textContent = t.home; home.href = t.homeHref;
+  const brand = document.getElementById('brand'); brand.textContent = lang === 'he' ? 'לחמים מכפרי' : 'Kafri Artisan Breads'; brand.href = t.homeHref;
+  document.getElementById('lang-btn').textContent = t.other;
+  document.getElementById('nav').innerHTML = CATALOG.map(s =>
+    `<a href="#${s.key}">${esc(L(s, 'title'))}<small>${esc(L(s, 'day').replace(/^(Baked|נאפים)\s*/,''))}</small></a>`).join('');
+  document.getElementById('main').innerHTML = CATALOG.map(s => `<section class="sec" id="${s.key}">
+      <div class="banner" style="background-image:url('${s.banner}')"><div class="banner-in">
+        <div><h2>${esc(L(s, 'title'))}</h2><div class="day">${esc(L(s, 'day'))}</div><p>${esc(L(s, 'intro')).replace("Janie's Mill", "<bdi>Janie's Mill</bdi>")}</p></div>
+        <a class="btn" href="${lang === 'he' ? s.orderHe : s.orderEn}">${t.orderAll} <span class="arr">→</span></a>
+      </div></div>
+      <div class="grid">${s.items.map(it => card(s, it)).join('')}</div>
+    </section>`).join('');
+  document.getElementById('footer').innerHTML = `<a href="${t.homeHref}">${t.home}</a> · ${t.footer}`;
+}
+function toggleLang(){
+  lang = lang === 'he' ? 'en' : 'he';
+  const u = new URL(location.href);
+  if (lang === 'he') u.searchParams.set('lang', 'he'); else u.searchParams.delete('lang');
+  history.replaceState(null, '', u);
+  render();
+}
+render();
+</script>
+</body>
+</html>

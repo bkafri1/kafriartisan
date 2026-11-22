@@ -44,11 +44,23 @@
       oven or get local delivery in Bergen County.
     </p>
 
+    <a class="tg-banner" id="tg-banner" href="catalog/order-tg-en.html">
+      <img src="images/thanksgiving-hero.jpg" alt="" loading="lazy">
+      <span class="tg-txt"><small>Thanksgiving pre-orders are open</small>
+        <b>Challahs, breads &amp; babkas for the holiday</b>
+        <span>Pickup Wed 11/25 or Thanksgiving Day · Order now →</span></span>
+    </a>
+<script>
+(function(){ // hides the Thanksgiving banner after Thanksgiving (New York time)
+  var d = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  if (d > '2026-11-26') { var b = document.getElementById('tg-banner'); if (b) b.remove(); }
+})();
+</script>
+
     <section class="schedule" aria-labelledby="sched-h">
       <h2 id="sched-h">Bake Schedule</h2>
       <ul>
         <li><span class="day">Monday &amp; Thursday</span><span class="what">Sourdough</span></li>
-        <li><span class="day">Wednesday</span><span class="what">Fall Collection</span></li>
         <li><span class="day">Friday</span><span class="what">Challah &amp; Babka</span></li>
       </ul>
     </section>
@@ -56,9 +68,6 @@
     <nav class="orders" aria-label="Order online">
       <a class="btn primary" href="catalog/order-en.html">
         <span>Order Sourdough<small>Monday &amp; Thursday</small></span><span class="arrow">→</span>
-      </a>
-      <a class="btn" href="catalog/order-fall-en.html">
-        <span>Order Fall Collection<small>Wednesday</small></span><span class="arrow">→</span>
       </a>
       <a class="btn" href="catalog/order-hala-en.html">
         <span>Order Challah &amp; Babka<small>Friday</small></span><span class="arrow">→</span>
