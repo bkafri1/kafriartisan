@@ -197,6 +197,19 @@ body{background:var(--cream);font-family:var(--font);color:var(--txt);min-height
 .wb-res a.open-btn{text-decoration:none;display:inline-block;}
 @media(max-width:600px){.wb-row{grid-template-columns:24px 1fr 40px 70px;}.wb-row>div:nth-child(5),.wb-row>div:nth-child(6){display:none;}}
 
+
+/* ── v13 EVENT + ANNOUNCE ── */
+.ev-day{border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:12px;background:#fffdf9;}
+.ann-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin:6px 0 4px;}
+.ann-stat{background:var(--warm);border:1px solid var(--accent-l);border-radius:10px;padding:10px;text-align:center;}
+.ann-stat b{display:block;font-size:22px;color:var(--brown);}
+.ann-stat span{font-size:11px;color:var(--txt2);}
+.ann-lang{padding:5px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:var(--font);font-size:12px;font-weight:700;color:var(--txt2);}
+.ann-lang.act{border-color:var(--accent);color:var(--accent);background:#fff8ee;}
+.ann-done{background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:12px;margin-top:12px;font-size:14px;line-height:1.7;}
+.ann-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px;}
+.ann-row input{flex:1;min-width:200px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-family:var(--font);font-size:14px;direction:ltr;}
+
 /* SAVE BAR */
 .save-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .save-status{font-size:13px;color:var(--txt2);}
@@ -253,6 +266,7 @@ body{background:var(--cream);font-family:var(--font);color:var(--txt);min-height
     <div class="tabs">
       <button class="tab active" onclick="switchTab('calendar')">📅 לוח אפייה</button>
       <button class="tab" onclick="switchTab('winback')">🔁 לקוחות לחזרה</button>
+      <button class="tab" onclick="switchTab('announce')">📣 הודעה ללקוחות</button>
       <button class="tab" onclick="switchTab('forms')">🔒 טפסים אחרים</button>
     </div>
 
@@ -315,6 +329,34 @@ body{background:var(--cream);font-family:var(--font);color:var(--txt);min-height
           <button class="btn-primary" id="wb-send" onclick="wbSend()" disabled>בחר לקוחות מהרשימה</button>
         </div>
         <div id="wb-results"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-announce">
+      <div class="section wb-panel">
+        <div class="section-title">📣 הודעה לכל הלקוחות — חג ההודיה</div>
+        <p class="cal-hint">נשלח פעם אחת לכל לקוח שהזמין אי פעם ויש לו אימייל (בלי מי שביקש הסרה), בשפה שבה הוא בדרך כלל מזמין. בלי קופון.</p>
+        <div class="ann-stats" id="ann-stats"></div>
+        <p class="cal-hint" id="ann-quota"></p>
+        <div class="wb-tpl">
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+            <button class="ann-lang act" data-lang="he" onclick="annShow('he')">עברית</button>
+            <button class="ann-lang" data-lang="en" onclick="annShow('en')">English</button>
+            <button class="skip-btn" onclick="annReset()" style="margin-inline-start:auto;">↺ חזור לנוסח המקורי</button>
+          </div>
+          <label>נושא המייל</label><input type="text" id="ann-subject" oninput="annOnEdit()">
+          <label>ההודעה — <span dir="ltr">{name} {link}</span> מתמלאים אוטומטית</label>
+          <textarea id="ann-body" oninput="annOnEdit()" style="min-height:200px;"></textarea>
+          <label>קישור</label><input type="text" id="ann-link" dir="ltr" oninput="annOnEdit()">
+          <label>תצוגה מקדימה</label><div class="wb-preview" id="ann-preview"></div>
+        </div>
+        <div class="ann-row">
+          <input type="email" id="ann-test" placeholder="your@email.com">
+          <button class="open-btn" id="ann-test-btn" onclick="annTest()">✉️ שלח לי מייל בדיקה</button>
+        </div>
+        <div class="wb-sendbar"><span class="cal-hint">לא יישלח פעמיים לאותו לקוח.</span>
+          <button class="btn-primary" id="ann-send" onclick="annSend()" disabled>טוען...</button></div>
+        <div id="ann-results"></div>
       </div>
     </div>
 
@@ -386,10 +428,11 @@ function logout() {
 // ── TABS ──
 function switchTab(tab) {
   activeTab = tab;
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['calendar','winback','forms'][i] === tab));
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['calendar','winback','announce','forms'][i] === tab));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
   if (tab === 'winback') wbInit();
+  if (tab === 'announce') annInit();
 }
 
 // ── SETTINGS (Hala tab only — decorative localStorage settings, unchanged for now) ──
@@ -692,8 +735,8 @@ function showToast(msg, isError) {
 // ════════════════════════════════════════════════════════════
 // v10 — לוח ימי אפייה (Bake Calendar)
 // ════════════════════════════════════════════════════════════
-const LINE_ICONS  = { sourdough: '🍞', fall: '🍂', challah: '🕯️' };
-const LINE_SHEETS = { sourdough: 'stock', fall: 'FallStock', challah: 'HalaStock' };
+const LINE_ICONS  = { sourdough: '🍞', fall: '🍂', challah: '🕯️', thanksgiving: '🦃' };
+const LINE_SHEETS = { sourdough: 'stock', fall: 'FallStock', challah: 'HalaStock', thanksgiving: 'TGStock' };
 let adminKey = '';
 let calData = null;
 
@@ -720,13 +763,15 @@ async function loadCalendar() {
 
 function renderCalendar() {
   const box = document.getElementById('calendar-lines');
-  const order = ['sourdough', 'fall', 'challah'];
+  const order = ['thanksgiving', 'sourdough', 'challah', 'fall'];
   box.innerHTML = order.filter(k => calData.lines[k]).map(k => renderLine(calData.lines[k])).join('');
   document.getElementById('cal-updated').textContent = 'עודכן: ' + new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
 }
 
 function renderLine(L) {
   const st = L.state;
+  if (st.event) return renderEventLine(L);
+  if (st.seasonClosed && !st.date) return `<div class="section"><div class="section-title">${LINE_ICONS[L.key]} ${esc(L.nameHe)}</div><p class="cal-hint">🔒 העונה סגורה. ללקוחות מוצג: "${esc(st.msgHe)}"</p></div>`;
   if (!st.date) return `<div class="section"><div class="section-title">${LINE_ICONS[L.key]} ${esc(L.nameHe)}</div><p>אין ימי אפייה פתוחים.</p></div>`;
   const badge = st.open
     ? `<span class="open-badge">פתוח להזמנות ✓</span>`
@@ -763,6 +808,33 @@ function renderLine(L) {
     ${L.next ? `<details class="cal-details"><summary>📅 יום האפייה הבא — ${esc(L.next.dateHe)} (אפשר להכין מראש)</summary>${renderDay(L.key, L.next, 'nxt')}
       <div class="cal-actions" style="margin-top:10px;"><button class="skip-btn" onclick="skipDay('${L.key}','${L.next.date}','${esc(L.next.dateHe)}')">דלג על ${esc(L.next.dateHe)}</button></div></details>` : ''}
     ${renderSkips(L)}
+  </div>`;
+}
+
+function renderEventLine(L) {
+  const days = L.days || [];
+  if (!days.length) return `<div class="section"><div class="section-title">${LINE_ICONS[L.key]} ${esc(L.nameHe)}</div><p>ההזמנות לאירוע הסתיימו.</p></div>`;
+  return `<div class="section cal-line" id="line-${L.key}">
+    <div class="section-title">${LINE_ICONS[L.key]} ${esc(L.nameHe)}</div>
+    ${days.map(d => {
+      const k = L.key + '-' + d.date;
+      const sum = d.info ? d.info.rows.reduce((a, r) => a + r.ordered, 0) : 0;
+      return `<div class="ev-day">
+        <div class="cal-head">
+          <div><div class="cal-date">${esc(d.dateHe)} · <span dir="ltr">${esc(d.hoursHe)}</span></div>
+            <div class="cal-cutoff">ההזמנות נסגרות אוטומטית: <b>${esc(d.cutoffHe)}</b> · הוזמנו ${sum} פריטים</div></div>
+          <div class="cal-actions">${d.open ? '<span class="open-badge">פתוח להזמנות ✓</span>' : '<span class="closed-badge">סגור ✗</span>'}
+            ${d.open ? `<button class="close-btn" onclick="toggleClosePanel('${k}')">סגור את היום</button>`
+                     : `<button class="open-btn" onclick="setDayClosed('${L.key}','${d.date}',false)">פתח מחדש</button>`}</div>
+        </div>
+        <div class="msg-panel" id="close-${k}">
+          <label>הודעה ללקוחות בעברית (לא חובה)</label><textarea id="close-he-${k}" placeholder="אזל — תודה לכולם!"></textarea>
+          <label>Message in English (optional)</label><textarea id="close-en-${k}" placeholder="Sold out — thank you all!"></textarea>
+          <p class="cal-hint">היום השני נשאר פתוח.</p>
+          <button class="apply-btn" onclick="setDayClosed('${L.key}','${d.date}',true,'${k}')">אשר סגירה</button>
+        </div>
+        ${renderDay(L.key, d.info, 'ev' + d.date.slice(-2))}
+      </div>`; }).join('')}
   </div>`;
 }
 
@@ -825,9 +897,10 @@ async function run(params, okMsg) {
   } catch (e) { showToast('שגיאת רשת — בדוק חיבור', true); }
 }
 
-function setDayClosed(line, date, closed) {
-  const msgHe = closed ? (document.getElementById('close-he-' + line)?.value.trim() || '') : '';
-  const msgEn = closed ? (document.getElementById('close-en-' + line)?.value.trim() || '') : '';
+function setDayClosed(line, date, closed, panelKey) {
+  const pk = panelKey || line;
+  const msgHe = closed ? (document.getElementById('close-he-' + pk)?.value.trim() || '') : '';
+  const msgEn = closed ? (document.getElementById('close-en-' + pk)?.value.trim() || '') : '';
   run({ action: 'setDayClosed', line, date, closed: String(closed), msgHe, msgEn }, closed ? '🔒 יום האפייה נסגר להזמנות' : '✓ יום האפייה נפתח מחדש');
 }
 function skipDay(line, date, label) {
@@ -1020,6 +1093,104 @@ function wbShowResults(results) {
 function wbCopy(i) {
   const r = document.getElementById('wb-results')._results[i];
   try { navigator.clipboard.writeText(r.text); showToast('✓ ההודעה הועתקה'); } catch (e) { prompt('העתק:', r.text); }
+}
+
+// ════════════════════════════════════════════════════════════
+// v13 — הודעה לכל הלקוחות (Announcement)
+// ════════════════════════════════════════════════════════════
+let annInfo = null, annTpl = null, annLang = 'he';
+const ANN_KEY = 'lm_announce_tpl_';
+async function annInit(force) {
+  const box = document.getElementById('ann-stats');
+  box.innerHTML = '<div class="cal-loading">טוען...</div>';
+  try {
+    const d = await api({ action: 'annInfo' });
+    if (!d.success) { box.innerHTML = `<div class="cal-error">שגיאה: ${esc(d.error)}</div>`; return; }
+    annInfo = d;
+    if (!annTpl || force) {
+      try { annTpl = JSON.parse(localStorage.getItem(ANN_KEY + d.campaign) || 'null'); } catch (e) {}
+      if (!annTpl) annTpl = JSON.parse(JSON.stringify({ he: d.defaults.he, en: d.defaults.en }));
+      annShow(annLang);
+      const t = document.getElementById('ann-test');
+      if (!t.value) t.value = localStorage.getItem('lm_ann_test') || d.ownerEmail || '';
+    }
+    box.innerHTML = `
+      <div class="ann-stat"><b>${d.eligible}</b><span>יקבלו את ההודעה</span></div>
+      <div class="ann-stat"><b>${d.he}</b><span>בעברית</span></div>
+      <div class="ann-stat"><b>${d.en}</b><span>באנגלית</span></div>
+      <div class="ann-stat"><b>${d.alreadySent}</b><span>כבר נשלח</span></div>
+      <div class="ann-stat"><b>${d.optedOut}</b><span>ביקשו הסרה</span></div>
+      <div class="ann-stat"><b>${d.totalCustomers - d.withEmail}</b><span>בלי אימייל</span></div>`;
+    document.getElementById('ann-quota').textContent = d.emailQuota == null ? '' :
+      `מכסת מיילים שנשארה היום: ${d.emailQuota}. ${d.eligible > Math.min(95, d.emailQuota - 2) ? 'לא כולם ייכנסו היום — אפשר ללחוץ שוב מחר, ולא יישלח פעמיים לאותו לקוח.' : ''}`;
+    const btn = document.getElementById('ann-send');
+    btn.disabled = !d.eligible; btn.textContent = d.eligible ? `📣 שלח לכל ${d.eligible} הלקוחות` : 'אין למי לשלוח';
+  } catch (e) { box.innerHTML = '<div class="cal-error">שגיאת רשת</div>'; }
+}
+function annRead() {
+  if (!annTpl) return;
+  annTpl[annLang] = { subject: document.getElementById('ann-subject').value, body: document.getElementById('ann-body').value, link: document.getElementById('ann-link').value };
+  try { localStorage.setItem(ANN_KEY + annInfo.campaign, JSON.stringify(annTpl)); } catch (e) {}
+}
+function annShow(lang) {
+  if (document.getElementById('ann-subject').dataset.ready) annRead();
+  annLang = lang;
+  document.querySelectorAll('.ann-lang').forEach(b => b.classList.toggle('act', b.dataset.lang === lang));
+  const dir = lang === 'he' ? 'rtl' : 'ltr';
+  ['ann-subject', 'ann-body'].forEach(id => { const el = document.getElementById(id); el.value = annTpl[lang][id === 'ann-subject' ? 'subject' : 'body']; el.dir = dir; el.dataset.ready = '1'; });
+  document.getElementById('ann-link').value = annTpl[lang].link;
+  annPreview();
+}
+function annOnEdit() { annRead(); annPreview(); }
+function annReset() {
+  if (!annInfo) return;
+  annTpl[annLang] = JSON.parse(JSON.stringify(annInfo.defaults[annLang]));
+  try { localStorage.setItem(ANN_KEY + annInfo.campaign, JSON.stringify(annTpl)); } catch (e) {}
+  document.getElementById('ann-subject').dataset.ready = ''; annShow(annLang);
+}
+function annPreview() {
+  const t = annTpl[annLang];
+  const name = annLang === 'en' ? 'Dana' : 'דנה';
+  const body = (t.body || '').replace(/\{name\}/g, name).replace(/\{link\}/g, t.link);
+  const foot = annLang === 'en' ? '\n\nDon\'t want these emails? Reply "remove".' : '\n\nלא רוצים לקבל הודעות כאלה? השיבו "הסר".';
+  const pv = document.getElementById('ann-preview');
+  pv.textContent = (annLang === 'en' ? 'Subject: ' : 'נושא: ') + t.subject + '\n\n' + body + foot;
+  pv.dir = annLang === 'he' ? 'rtl' : 'ltr';
+}
+async function annPost(extra) {
+  annRead();
+  const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action: 'announceSend', key: adminKey, campaign: annInfo.campaign, templates: annTpl }, extra)) });
+  return res.json();
+}
+async function annTest() {
+  const to = document.getElementById('ann-test').value.trim();
+  if (!/@/.test(to)) { showToast('הכנס אימייל לבדיקה', true); return; }
+  try { localStorage.setItem('lm_ann_test', to); } catch (e) {}
+  const btn = document.getElementById('ann-test-btn'); btn.disabled = true;
+  try {
+    const r = await annPost({ test: true, testEmail: to });
+    if (r.success) { showToast('✓ נשלחו 2 מיילים לבדיקה (עברית + אנגלית) ל-' + r.to); annTested = true; }
+    else showToast('שגיאה: ' + r.error, true);
+  } catch (e) { showToast('שגיאת רשת', true); }
+  btn.disabled = false;
+}
+let annTested = false;
+async function annSend() {
+  if (!annInfo || !annInfo.eligible) return;
+  if (!annTested && !confirm('עוד לא שלחת לעצמך מייל בדיקה. להמשיך בכל זאת?')) return;
+  if (!confirm(`לשלוח את ההודעה ל-${annInfo.eligible} לקוחות עכשיו?\nאי אפשר לבטל אחרי השליחה.`)) return;
+  const btn = document.getElementById('ann-send'); btn.disabled = true; btn.textContent = 'שולח... (זה יכול לקחת דקה-שתיים)';
+  const out = document.getElementById('ann-results');
+  try {
+    const r = await annPost({ test: false });
+    if (!r.success) { out.innerHTML = `<div class="cal-error">שגיאה: ${esc(r.error)}</div>`; }
+    else {
+      out.innerHTML = `<div class="ann-done">✓ נשלחו ${r.sent} מיילים.` +
+        (r.failed.length ? ` ${r.failed.length} נכשלו: ${r.failed.map(f => esc(f.email)).join(', ')}.` : '') +
+        (r.remaining > 0 ? `<br>נשארו ${r.remaining} לקוחות — המכסה היומית של Gmail נגמרה. לחץ שוב מחר כדי להשלים.` : '<br>כל הלקוחות קיבלו את ההודעה.') + '</div>';
+    }
+  } catch (e) { out.innerHTML = '<div class="cal-error">שגיאת רשת — ייתכן שחלק נשלחו. רענן כדי לראות כמה נשארו.</div>'; }
+  annInit();
 }
 
 </script>

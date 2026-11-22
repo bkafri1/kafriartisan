@@ -642,8 +642,13 @@ function showBakeClosed(d) {
     if (title) title.textContent = bakeTxt(`ההזמנות ל${d.dateHe} סגורות 🔒`, `Orders for ${d.dateEn} are closed 🔒`);
     if (msg) msg.textContent = (custom ? custom + ' ' : bakeTxt('אזל — תודה לכולם! ', 'Sold out — thank you all! ')) + nxt;
   } else {
-    if (title) title.textContent = bakeTxt('אין כרגע ימי אפייה פתוחים 🔒', 'No bake days are open right now 🔒');
-    if (msg) msg.textContent = bakeTxt('נחזור בקרוב!', 'Check back soon!');
+    if (d && d.seasonClosed) {
+      if (title) title.textContent = bakeTxt('העונה הסתיימה 🍂', 'Closed for the season 🍂');
+      if (msg) msg.textContent = (IS_HE ? d.msgHe : d.msgEn) || bakeTxt('נחזור בקרוב!', 'Check back soon!');
+    } else {
+      if (title) title.textContent = bakeTxt('אין כרגע ימי אפייה פתוחים 🔒', 'No bake days are open right now 🔒');
+      if (msg) msg.textContent = (d && (IS_HE ? d.msgHe : d.msgEn)) || bakeTxt('נחזור בקרוב!', 'Check back soon!');
+    }
   }
   window.scrollTo(0, 0);
 }
