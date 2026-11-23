@@ -103,6 +103,8 @@ html[lang="he"] .eyebrow{letter-spacing:.05em;font-size:14px;}
 .paybtn.venmo{background:#008CFF;border-color:#008CFF;color:#fff;}
 .ghost{display:block;width:100%;text-align:center;padding:13px;border:1px solid var(--line);border-radius:12px;background:none;font:inherit;font-weight:700;color:var(--txt2);cursor:pointer;text-decoration:none;margin-top:8px;}
 .foot{text-align:center;font-size:12px;color:var(--txt2);padding:10px 16px 30px;}
+.optin{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--txt2);cursor:pointer;}
+.optin input{margin-top:2px;accent-color:var(--pumpkin);width:16px;height:16px;}
 .ltr{direction:ltr;unicode-bidi:isolate;}
 </style>
 </head>
@@ -166,6 +168,7 @@ html[lang="he"] .eyebrow{letter-spacing:.05em;font-size:14px;}
           <div class="fi"><label id="l-phone"></label><input id="f-phone" type="tel" autocomplete="tel"></div>
         </div>
         <div class="fi"><label id="l-email"></label><input id="f-email" type="email" autocomplete="email"></div>
+        <label class="optin" id="optin-wrap" style="display:none"><input type="checkbox" id="f-optin"> <span id="l-optin"></span></label>
       </div>
       <div style="height:14px"></div>
       <label class="ro sel" id="opt-pickup"><input type="radio" name="dlv" value="pickup" checked><div><b id="t-pickup"></b><div class="sub" id="t-pickup-sub"></div></div></label>
@@ -181,25 +184,27 @@ html[lang="he"] .eyebrow{letter-spacing:.05em;font-size:14px;}
 <script>
 const IS_HE = true;
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzdF03GIEPXnSFvwKc5II8BhyXX4QUGljF9IRlkOvewwQh6X70_gsh7iogZbrBhB4vUg/exec';
-const FORM_NAME = IS_HE ? 'tg-he' : 'tg-en';
+const CFG = {};
+const FORM_NAME = CFG.form || (IS_HE ? 'tg-he' : 'tg-en');
+const PLACE = CFG.place || '68 Cortlandt Pl, Tenafly, NJ';
 const VENMO_LINK = 'https://venmo.com/code?user_id=4416788448151226881&created=1791152174';
 const ZELLE_TO = 'tenebit.soft@gmail.com';
 const DELIVERY_MIN = 35;
 const DAY_NOTES = { '2026-11-25': { he: 'הכל מוכן לשולחן החג, בלי לרוץ ביום החג', en: 'Everything ready for the holiday table, no Thanksgiving Day rush' } };
-const PRODUCTS = [{"id": "tg-challah-shabbat", "img": "challah-shabbat", "price": 12, "nameHe": "חלת שבת", "nameEn": "Shabbat Challah", "badgesHe": ["טבעוני"], "badgesEn": ["Vegan"], "descHe": "חלה פרווה רכה ואוורירית במיוחד (בשיטת טנגז׳ונג), במתיקות עדינה של דבש ונגיעת קינמון.", "descEn": "An extra-soft, pillowy pareve challah (tangzhong method), gently sweetened with honey and a hint of cinnamon."}, {"id": "tg-challah-pumpkin", "img": "tg-challah-pumpkin", "price": 12, "nameHe": "חלת דלעת", "nameEn": "Pumpkin Challah", "badgesHe": ["חדש", "טבעוני"], "badgesEn": ["New", "Vegan"], "descHe": "חלה רכה וזהובה עם מחית דלעת, מעוטרת בגרעיני דלעת. חלה חגיגית לשולחן החג.", "descEn": "A soft, golden challah made with pumpkin purée and topped with pumpkin seeds. A festive centerpiece for the holiday table."}, {"id": "tg-nuts", "img": "nuts", "price": 10, "nameHe": "מחמצת אגוזים", "nameEn": "Walnut Sourdough", "badgesHe": ["טבעוני"], "badgesEn": ["Vegan"], "descHe": "מחמצת קמח מלא עם אגוזי מלך — עשירה, אגוזית ומשביעה.", "descEn": "Whole wheat sourdough with walnuts — rich, nutty and satisfying."}, {"id": "tg-african", "img": "baker-special", "price": 12, "nameHe": "לחם אפריקאי (נלסון)", "nameEn": "African Bread (Nelson)", "badgesHe": ["טבעוני"], "badgesEn": ["Vegan"], "descHe": "לחם תבנית בסגנון אפריקאי — קמח מלא, סובין ושיבולת שועל, עם נגיעה של דבש. רך, מלא בדגנים, ומושלם לכריכים.", "descEn": "A hearty African-style tin loaf with whole wheat, bran and oats and a touch of honey. Soft, full of whole grains, and perfect for sandwiches."}, {"id": "tg-babka-choco", "img": "babka-choco-whole", "price": 17, "nameHe": "בבקת שוקולד", "nameEn": "Chocolate Babka", "badgesHe": ["עוגה שלמה"], "badgesEn": ["Whole cake"], "descHe": "צמה מרשימה עם שכבות של שוקולד עשיר. מושלמת לאירוח.", "descEn": "An impressive braid with layers of rich chocolate. Perfect for entertaining."}, {"id": "tg-babka-pumpkin", "img": "tg-babka-pumpkin", "price": 17, "nameHe": "בבקת דלעת", "nameEn": "Pumpkin Babka", "badgesHe": ["חדש", "עוגה שלמה"], "badgesEn": ["New", "Whole cake"], "descHe": "בבקה חגיגית בבצק דלעת זהוב, עם שכבות של שוקולד מריר.", "descEn": "A festive babka made with golden pumpkin dough and layers of dark chocolate."}, {"id": "tg-cookie3", "img": "tg-cookie3", "price": 10, "nameHe": "עוגיות תפוחים (שקית של 3)", "nameEn": "Apple Cookies (bag of 3)", "badgesHe": ["חלבי"], "badgesEn": ["Dairy"], "descHe": "שיבולת שועל, מייפל, סוכר חום, קינמון ותפוחים מיובשים, בעוגייה גדולה ועשירה עם מתיקות של סתיו.", "descEn": "Oats, maple, brown sugar, cinnamon and dried apples in one big, rich cookie with all the sweetness of fall."}];
+const PRODUCTS = [{"id": "tg-challah-shabbat", "img": "challah-shabbat", "price": 12, "nameHe": "חלת חג", "nameEn": "Holiday Challah", "badgesHe": ["פרווה"], "badgesEn": ["Parve"], "descHe": "חלה פרווה רכה ואוורירית במיוחד (בשיטת טנגז׳ונג), במתיקות עדינה של דבש ונגיעת קינמון.", "descEn": "An extra-soft, pillowy pareve challah (tangzhong method), gently sweetened with honey and a hint of cinnamon."}, {"id": "tg-challah-pumpkin", "img": "tg-challah-pumpkin", "price": 12, "nameHe": "חלת דלעת", "nameEn": "Pumpkin Challah", "badgesHe": ["חדש", "פרווה"], "badgesEn": ["New", "Parve"], "descHe": "חלה רכה וזהובה עם מחית דלעת, מעוטרת בגרעיני דלעת. חלה חגיגית לשולחן החג.", "descEn": "A soft, golden challah made with pumpkin purée and topped with pumpkin seeds. A festive centerpiece for the holiday table."}, {"id": "tg-nuts", "img": "nuts", "price": 10, "nameHe": "מחמצת אגוזים", "nameEn": "Walnut Sourdough", "badgesHe": ["פרווה"], "badgesEn": ["Parve"], "descHe": "מחמצת קמח מלא עם אגוזי מלך — עשירה, אגוזית ומשביעה.", "descEn": "Whole wheat sourdough with walnuts — rich, nutty and satisfying."}, {"id": "tg-african", "img": "baker-special", "price": 12, "nameHe": "לחם אפריקאי (נלסון)", "nameEn": "African Bread (Nelson)", "badgesHe": ["פרווה"], "badgesEn": ["Parve"], "descHe": "לחם תבנית בסגנון אפריקאי — קמח מלא, סובין ושיבולת שועל, עם נגיעה של דבש. רך, מלא בדגנים, ומושלם לכריכים.", "descEn": "A hearty African-style tin loaf with whole wheat, bran and oats and a touch of honey. Soft, full of whole grains, and perfect for sandwiches."}, {"id": "tg-babka-choco", "img": "babka-choco-whole", "price": 17, "nameHe": "בבקת שוקולד", "nameEn": "Chocolate Babka", "badgesHe": ["עוגה שלמה"], "badgesEn": ["Whole cake"], "descHe": "צמה מרשימה עם שכבות של שוקולד עשיר. מושלמת לאירוח.", "descEn": "An impressive braid with layers of rich chocolate. Perfect for entertaining."}, {"id": "tg-babka-pumpkin", "img": "tg-babka-pumpkin", "price": 17, "nameHe": "בבקת דלעת", "nameEn": "Pumpkin Babka", "badgesHe": ["חדש", "עוגה שלמה"], "badgesEn": ["New", "Whole cake"], "descHe": "בבקה חגיגית בבצק דלעת זהוב, עם שכבות של שוקולד מריר.", "descEn": "A festive babka made with golden pumpkin dough and layers of dark chocolate."}, {"id": "tg-cookie3", "img": "tg-cookie3", "price": 10, "nameHe": "עוגיות תפוחים (שקית של 3)", "nameEn": "Apple Cookies (bag of 3)", "badgesHe": ["חלבי"], "badgesEn": ["Dairy"], "descHe": "שיבולת שועל, מייפל, סוכר חום, קינמון ותפוחים מיובשים, בעוגייה גדולה ועשירה עם מתיקות של סתיו.", "descEn": "Oats, maple, brown sugar, cinnamon and dried apples in one big, rich cookie with all the sweetness of fall."}].map(p => Object.assign({}, p, CFG.prices && CFG.prices[p.id] != null ? { price: CFG.prices[p.id] } : {}));
 const T = IS_HE ? {
   eyebrow:'חג ההודיה 2026', h1:'חג ההודיה ב-Kafri Artisan', tagline:'חלות, לחמים ובבקות חגיגיים — מזמינים מראש, ואוספים טרי ביום רביעי או ביום החג.',
   home:'→ דף הבית', homeHref:'../he/', other:'English', otherHref:'order-tg-en.html',
   loading:'טוען את ימי האיסוף…', day:'בחרו יום איסוף', prod:'בחרו מה להזמין', sum:'סיכום ההזמנה', details:'פרטים ואופן קבלה',
   pickupDay:'איסוף', open:'פתוח להזמנות', closed:'ההזמנות ליום הזה סגורות', soldout:'אזל', left:n=>`נשארו ${n}`,
   empty:'עוד לא נבחרו מוצרים', total:'סה"כ', name:'שם מלא', phone:'טלפון', email:'אימייל (לאישור הזמנה)',
-  pickup:'איסוף עצמי', pickupSub:h=>`68 Cortlandt Pl, Tenafly, NJ · ${h}`, delivery:'משלוח עד הבית', deliverySub:h=>`בהזמנה מ-$35 · עד 10 דקות מטנאפליי · ${h}`,
+  pickup:'איסוף עצמי', pickupSub:h=>`${PLACE} · ${h}`, delivery:'משלוח עד הבית', deliverySub:h=>`בהזמנה מ-$35 · עד 10 דקות מטנאפליי · ${h}`,
   addr:'כתובת למשלוח', notes:'הערות (לא חובה)', submit:'שליחת הזמנה', sending:'שולח…',
   chooseDay:'נא לבחור יום איסוף.', needName:'נא למלא שם מלא.', needPhone:'נא למלא טלפון.', needAddr:'נא למלא כתובת למשלוח.', needItems:'נא לבחור לפחות מוצר אחד.',
   dlvMin:'משלוח זמין להזמנות מ-$35 ומעלה.', err:'משהו השתבש בשליחת ההזמנה. נסו שוב או כתבו לנו בוואטסאפ.', net:'לא הצלחנו להגיע לשרת. בדקו חיבור ונסו שוב.',
   dayClosed:'ההזמנות ליום שבחרתם נסגרו. נא לבחור יום אחר.', soldMsg:(n,r)=>`נשארו רק ${r} של "${n}". נא לעדכן את הכמות.`, unavail:n=>`"${n}" לא זמין ביום הזה.`,
   closedTitle:'ההזמנות לחג ההודיה סגורות', tyTitle:n=>`תודה ${n}!`, confirmed:'ההזמנה התקבלה ואושרה! אין צורך לחכות לאישור נוסף.',
-  tyDay:(d)=>`יום האיסוף: ${d}`, tyPickup:h=>`איסוף בין ${h} · 68 Cortlandt Pl, Tenafly, NJ`, tyDelivery:h=>`המשלוח יגיע אליכם בין ${h}.`, tyEmail:e=>`אישור הזמנה נשלח למייל ${e}`,
+  tyDay:(d)=>`יום האיסוף: ${d}`, tyPickup:h=>`איסוף בין ${h} · ${PLACE}`, tyDelivery:h=>`המשלוח יגיע אליכם בין ${h}.`, tyEmail:e=>`אישור הזמנה נשלח למייל ${e}`,
   sumTitle:'סיכום הזמנה', payTitle:'תשלום', payAmount:a=>`סכום לתשלום: <b style="font-size:18px;color:var(--brown)">$${a}</b> — אפשר לשלם כבר עכשיו.`,
   venmo:a=>`תשלום $${a} ב-Venmo`, zelle:'Zelle', zelleMsg:a=>`תשלום ב-Zelle ל: ${ZELLE_TO}\nסכום: $${a}\n(הכתובת הועתקה)`, payNote:'בהערה בתשלום כתבו את שמכם ויום האיסוף',
   backHome:'חזרה לדף הבית', foot:'לחמים מכפרי · שאלות? הודעה ל-(201) 640-7542',
@@ -209,13 +214,13 @@ const T = IS_HE ? {
   loading:'Loading pickup days…', day:'Choose your pickup day', prod:'Choose your order', sum:'Order summary', details:'Your details',
   pickupDay:'Pickup', open:'Open for orders', closed:'Orders for this day are closed', soldout:'Sold out', left:n=>`Only ${n} left`,
   empty:'No items selected yet', total:'Total', name:'Full name', phone:'Phone', email:'Email (for order confirmation)',
-  pickup:'Self pickup', pickupSub:h=>`68 Cortlandt Pl, Tenafly, NJ · ${h}`, delivery:'Home delivery', deliverySub:h=>`Orders of $35+ · within 10 minutes of Tenafly · ${h}`,
+  pickup:'Self pickup', pickupSub:h=>`${PLACE} · ${h}`, delivery:'Home delivery', deliverySub:h=>`Orders of $35+ · within 10 minutes of Tenafly · ${h}`,
   addr:'Delivery address', notes:'Notes (optional)', submit:'Place order', sending:'Sending…',
   chooseDay:'Please choose a pickup day.', needName:'Please enter your full name.', needPhone:'Please enter your phone number.', needAddr:'Please enter a delivery address.', needItems:'Please choose at least one item.',
   dlvMin:'Delivery is available for orders of $35 or more.', err:'Something went wrong sending your order. Please try again or message us on WhatsApp.', net:"We couldn't reach the server. Check your connection and try again.",
   dayClosed:'Orders for the day you chose are closed. Please choose another day.', soldMsg:(n,r)=>`Only ${r} left of "${n}". Please update the quantity.`, unavail:n=>`"${n}" isn't available on this day.`,
   closedTitle:'Thanksgiving orders are closed', tyTitle:n=>`Thank you, ${n}!`, confirmed:'Your order is received and confirmed! No need to wait for anything else.',
-  tyDay:(d)=>`Pickup day: ${d}`, tyPickup:h=>`Pickup between ${h} · 68 Cortlandt Pl, Tenafly, NJ`, tyDelivery:h=>`Your delivery will arrive between ${h}.`, tyEmail:e=>`A confirmation email is on its way to ${e}`,
+  tyDay:(d)=>`Pickup day: ${d}`, tyPickup:h=>`${/^from/.test(h) ? 'Pickup ' + h : 'Pickup between ' + h} · ${PLACE}`, tyDelivery:h=>`Your delivery will arrive between ${h}.`, tyEmail:e=>`A confirmation email is on its way to ${e}`,
   sumTitle:'Order summary', payTitle:'Payment', payAmount:a=>`Amount to pay: <b style="font-size:18px;color:var(--brown)">$${a}</b> — you can pay right now.`,
   venmo:a=>`Pay $${a} on Venmo`, zelle:'Zelle', zelleMsg:a=>`Pay with Zelle to: ${ZELLE_TO}\nAmount: $${a}\n(address copied)`, payNote:'Please add your name and pickup day in the payment note',
   backHome:'Back to home page', foot:'Kafri Artisan Breads · Questions? Text (201) 640-7542',
@@ -236,6 +241,14 @@ function initText() {
   $('ty-sum-title').textContent = T.sumTitle; $('ty-pay-title').textContent = T.payTitle; $('ty-pay-note').textContent = T.payNote;
   $('ty-home').textContent = T.backHome; $('ty-home').href = T.homeHref; $('closed-home').textContent = T.backHome; $('closed-home').href = T.homeHref;
   $('foot').textContent = T.foot;
+  if (CFG.tagline) $('tagline').textContent = CFG.tagline;
+  if (CFG.h1) $('h1').textContent = CFG.h1;
+  if (CFG.optin) { $('optin-wrap').style.display = 'flex'; $('l-optin').textContent = CFG.optin; }
+  if (CFG.eyebrow) $('eyebrow').textContent = CFG.eyebrow;
+  if (CFG.homeHref) { ['home-link', 'ty-home', 'closed-home'].forEach(id => $(id).href = CFG.homeHref);
+    $('home-link').textContent = CFG.homeLink; $('ty-home').textContent = CFG.homeButton; $('closed-home').textContent = CFG.homeButton; }
+  if (CFG.noLang) { $('lang-link').remove(); document.querySelector('.links span').remove(); }
+  if (CFG.pickupOnly) { $('opt-delivery').remove(); $('addr-wrap').remove(); }
   try { const s = JSON.parse(localStorage.getItem('lm_customer') || 'null'); if (s) { $('f-name').value = s.name || ''; $('f-phone').value = s.phone || ''; $('f-email').value = s.email || ''; } } catch (e) {}
 }
 
@@ -264,7 +277,7 @@ function renderDays() {
   $('days').innerHTML = DAYS.map(d => `<button type="button" class="day ${d.date === day ? 'sel' : ''} ${d.open ? '' : 'off'}" ${d.open ? `onclick="pickDay('${d.date}')"` : 'disabled'}>
       <b>${esc(IS_HE ? d.dateHe : d.dateEn)}</b>
       <small>${T.pickupDay} <span class="ltr">${esc(IS_HE ? d.hoursHe : d.hoursEn)}</span></small>
-      ${DAY_NOTES[d.date] ? `<small class="dnote">${esc(DAY_NOTES[d.date][IS_HE ? 'he' : 'en'])}</small>` : ''}
+      ${!CFG.form && DAY_NOTES[d.date] ? `<small class="dnote">${esc(DAY_NOTES[d.date][IS_HE ? 'he' : 'en'])}</small>` : ''}
       <span class="tag">${d.open ? T.open : T.closed}</span></button>`).join('');
 }
 function pickDay(d) { day = d; renderDays(); renderProducts(); refresh(); }
@@ -304,6 +317,7 @@ function refresh() {
     : `<p class="sr empty">${T.empty}</p>`;
   const h = hours();
   $('t-pickup-sub').innerHTML = `<span class="ltr">${esc(T.pickupSub(h))}</span>`;
+  if (CFG.pickupOnly) { $('submit').disabled = !sel.length || !day; return; }
   $('t-delivery-sub').textContent = T.deliverySub(h);
   const canDeliver = total() >= DELIVERY_MIN;
   $('opt-delivery').classList.toggle('disabled', !canDeliver);
@@ -313,16 +327,17 @@ function refresh() {
 }
 function setMode(m) {
   mode = m;
+  if (CFG.pickupOnly) { mode = 'pickup'; return; }
   $('opt-pickup').classList.toggle('sel', m === 'pickup'); $('opt-delivery').classList.toggle('sel', m === 'delivery');
   $('opt-pickup').querySelector('input').checked = m === 'pickup'; $('opt-delivery').querySelector('input').checked = m === 'delivery';
   $('addr-wrap').style.display = m === 'delivery' ? 'block' : 'none';
 }
 $('opt-pickup').addEventListener('click', () => setMode('pickup'));
-$('opt-delivery').addEventListener('click', e => { if (total() < DELIVERY_MIN) { e.preventDefault(); return; } setMode('delivery'); });
+if (!CFG.pickupOnly) $('opt-delivery').addEventListener('click', e => { if (total() < DELIVERY_MIN) { e.preventDefault(); return; } setMode('delivery'); });
 
 async function submit() {
   const name = $('f-name').value.trim(), phone = $('f-phone').value.trim(), email = $('f-email').value.trim();
-  const addr = $('f-addr').value.trim(), notes = $('f-notes').value.trim();
+  const addr = CFG.pickupOnly ? '' : $('f-addr').value.trim(), notes = $('f-notes').value.trim();
   if (!day) return alert(T.chooseDay);
   if (!PRODUCTS.some(p => qtys[p.id] > 0)) return alert(T.needItems);
   if (!name) return alert(T.needName);
@@ -334,6 +349,7 @@ async function submit() {
   const params = new URLSearchParams({ name, phone, email, addr: mode === 'delivery' ? addr : '', notes, total: total(), lang: IS_HE ? 'he' : 'en',
     form: FORM_NAME, bakeDate: day, delivery: mode === 'delivery' ? (IS_HE ? 'משלוח' : 'Delivery') : (IS_HE ? 'איסוף עצמי' : 'Self Pickup') });
   PRODUCTS.forEach(p => params.append('qty_' + p.id, qtys[p.id] || 0));
+  if (CFG.optin) params.set('optin', $('f-optin').checked ? 'yes' : 'no');
   const reset = () => { btn.disabled = false; btn.textContent = T.submit; };
   try {
     const d = await (await fetch(SCRIPT_URL + '?' + params.toString(), { method: 'GET', redirect: 'follow' })).json();
@@ -356,7 +372,7 @@ function thanks(d, name, email) {
   $('form').classList.remove('show'); $('ty').classList.add('show');
   $('ty-title').textContent = T.tyTitle(name.split(/\s+/)[0]);
   const lines = [T.confirmed, T.tyDay(IS_HE ? d.bakeDateHe : d.bakeDateEn), mode === 'delivery' ? T.tyDelivery(h) : T.tyPickup(h), email ? T.tyEmail(email) : ''].filter(Boolean);
-  $('ty-sub').innerHTML = lines.map(l => esc(l).replace(/(68 Cortlandt Pl, Tenafly, NJ|\S+@\S+|\d{1,2}:\d{2}\D+\d{1,2}:\d{2}( [AP]M)?)/g, '<bdi>$1</bdi>')).join('<br>');
+  $('ty-sub').innerHTML = lines.map(l => esc(l).split(esc(PLACE)).join('\u0001').replace(/(\S+@\S+|\d{1,2}:\d{2}\D+\d{1,2}:\d{2}( [AP]M)?)/g, '<bdi>$1</bdi>').split('\u0001').join('<bdi>' + esc(PLACE) + '</bdi>')).join('<br>');
   $('ty-sum').innerHTML = sel.map(p => `<div class="sr"><span>${esc(N(p))} × ${qtys[p.id]}</span><span>$${p.price * qtys[p.id]}</span></div>`).join('') +
     `<hr class="sdiv"><div class="sr stot"><span>${T.total}</span><span>$${amount}</span></div>`;
   $('ty-pay-amount').innerHTML = T.payAmount(amount);
